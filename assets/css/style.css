@@ -1,0 +1,7 @@
+nav.inactive {
+    opacity: 0;
+}
+
+nav.active {
+    opacity: 1;
+}
