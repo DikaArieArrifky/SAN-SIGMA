@@ -1,0 +1,88 @@
+/* Reset CSS */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap');
+/* font huruf open sans*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: 'open-sans', sans-serif;
+}
+
+/* Background with abstract lines */
+.background {
+  background-color: #f5f5f5;
+  background-image: url('../img/aw.svg'); /* Replace with your abstract SVG background */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Login Container */
+.login-container {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 50px 40px; /* Tambahkan padding agar kontennya lebih luas */
+  width: 400px; /* Perbesar lebar kotak */
+  text-align: center;
+}
+
+/* Logo */
+.logo {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+/* Input Fields */
+.input-field {
+  width: 100%;
+  padding: 15px; /* Tambah ruang dalam input */
+  margin-bottom: 20px; /* Tambah jarak antar input */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px; /* Perbesar teks */
+}
+
+/* Login Button */
+.login-button {
+  width: 100%;
+  padding: 15px; /* Tambah ruang dalam tombol */
+  background-color: #007bff;
+  color: white;
+  font-size: 18px; /* Perbesar teks */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+/* Label */
+.input-label {
+  display: block; /* Tampilkan label di atas input */
+  margin-bottom: 5px; /* Jarak antara label dan input */
+  font-size: 18px; /* Ukuran teks */
+  color: #808080; /* Warna abu-abu */
+  text-align: left; /* Rata kiri */
+  font-family: 'Open Sans', sans-serif; /* Terapkan font Open Sans */
+  font-weight: bold; /* Supaya lebih menonjol */
+}
+
+
+
+.input-field:focus {
+  border-color: #007bff; /* Warna biru untuk garis tepi */
+  outline: none; /* Menghilangkan garis bawaan browser */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Menambahkan efek cahaya biru */
+}

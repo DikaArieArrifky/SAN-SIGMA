@@ -777,7 +777,6 @@ section,
 .hero .btn-watch-video {
   font-size: 16px;
   transition: 0.5s;
-  margin-left: 25px;
   color: var(--default-color);
   font-weight: 600;
 }

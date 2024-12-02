@@ -51,8 +51,9 @@
                 </ul>
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
-
-            <a class="btn-getstarted" href="/login">Log-in</a>
+            <form method="get" action="login">
+                <button class="btn-getstarted" id="login-go" type="submit">Login</button>
+            </form>
 
         </div>
     </header>
@@ -69,7 +70,6 @@
                             Dengan SAN SIGMA</h1>
                         <p class="">Selamat Atas Penghargaan Anda !! ✋😊 </p>
                         <div class="d-flex">
-                            <a href="/login" class="btn-get-started">Log-in</a>
                             <a href="https://youtu.be/8TO38KzkgaI?si=-MrDUZStIz2cm2EL"
                                 class="glightbox btn-watch-video d-flex align-items-center"><i
                                     class="bi bi-play-circle"></i><span>Watch Video</span></a>
@@ -444,11 +444,11 @@
                         <div class="php-email-form" data-aos="fade-up"
                             data-aos-delay="1000">
                             <div class="row gy-4" style="margin-bottom: 10px;">
-                                <img src="<?=IMG;?>\skills.png" alt="">
+                                <img src="<?= IMG; ?>\skills.png" alt="">
                             </div>
 
                             <div class="row gy-4">
-                                <img src="<?=IMG;?>\skills.png" alt="">
+                                <img src="<?= IMG; ?>\skills.png" alt="">
                             </div>
                         </div>
                     </div><!-- End Contact Form -->

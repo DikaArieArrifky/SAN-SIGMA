@@ -17,5 +17,10 @@ class LoginController extends Controller
         $this->view('landing/index', []);
     }
 
-    
+    public function login()
+    {
+       
+            $this->view('login/index', ['']);
+        
+    }
 }
