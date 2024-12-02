@@ -5,7 +5,7 @@ function getDatabaseConfig(): array
 {
     return [
         "server_name" => "Helios16",
-        "database" => "BebasTA",
+        "database" => "san_sigma1",
         "username" => "",
         "password" => "",
     ];
