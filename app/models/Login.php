@@ -11,16 +11,9 @@ class Login extends Model
 
     public function getUser($username, $password,$role)
     {
-        $query = $this->db->prepare("SELECT * FROM users WHERE Username = :username AND Password = :password AND role = :role");
+        $query = $this->db->prepare("SELECT * FROM users WHERE Username = :username AND Password = :password ");
         $query->bindValue(":username", $username);
         $query->bindValue(":password", $password);
-       if ($role['role'] == 'admin') {
-            $query->bindValue(":role", 'admin');
-        } else if ($role['role'] == 'dosen') {
-            $query->bindValue(":role", 'dosen');
-        } else if ($role['role'] == 'mahasiswa') {
-            $query->bindValue(":role", 'mahasiswa');
-        }
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }
@@ -30,6 +23,9 @@ class Login extends Model
         $query->bindValue(":username", $username);
         $query->bindValue(":password", $password);
         $query->execute();
+        if ($query->rowCount() == 0) {
+            return false;
+        }
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 }

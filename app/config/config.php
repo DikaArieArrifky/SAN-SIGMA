@@ -5,11 +5,12 @@ function getDatabaseConfig(): array
 {
     return [
         "server_name" => "Helios16",
-        "database" => "san_sigma1",
+        "database" => "san_sigma2",
         "username" => "",
         "password" => "",
     ];
 }
+
 
 define('FILEDATABASE', '../file_database/');
 define('FILEDATABASE_URL', (getDatabaseConfig()['server_name'] != gethostname()

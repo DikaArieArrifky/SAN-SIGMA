@@ -28,8 +28,7 @@ class App
     {
         if (isset($url)) {
             $arr =  array_values(array_filter(explode('/', filter_var(trim($url, '/'), FILTER_SANITIZE_URL))));
-            // array_splice($arr, 0, 4);
-            array_splice($arr, 0, array_search('public', $arr)+1);
+            array_splice($arr, 0, array_search(basename(dirname(dirname(__DIR__))), $arr)+1);
             return $arr;
         }
         return [];

@@ -1,3 +1,20 @@
+<?php
+require_once 'app/models/Landing.php';
+require_once 'app/core/Database.php';
+
+// Initialize the database connection
+$dbConfig = getDatabaseConfig(); // Assuming you have a function to get the database configuration
+$db = Database::getInstance(getDatabaseConfig(), [$this, 'error']);
+
+// Create an instance of the Landing model
+$landingModel = new Landing($db);
+
+// Fetch the top 10 mahasiswas
+$top10mahasiswas = $landingModel->getTop10mahasiswas();
+
+//fetsch top 10 dosen
+$top10dosen = $landingModel->getTop10dosen();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -336,60 +353,31 @@
                             <h3>TOP 10</h3>
                             <h4><sup>Mahasiswa</sup></h4>
                             <ol class="p-0" style="list-style: none;">
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #FFD700, #FFA500); width: 50px; text-align: center;">1st</span>
-                                    <span>Ahmad Firdaus - 1000 Points</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #C0C0C0, #D3D3D3); width: 50px; text-align: center;">2nd</span>
-                                    <span>Sarah Amalia - 950 Points</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #CD7F32, #B8860B); width: 50px; text-align: center;">3rd</span>
-                                    <span>Budi Santoso - 900 Points</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #4e54c8, #8f94fb); width: 50px; text-align: center;">4th</span>
-                                    <span>Putri Rahayu - 850 Points</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #4e54c8, #8f94fb); width: 50px; text-align: center;">5th</span>
-                                    <span>Reza Pratama - 800 Points</span>
-                                </li>
+                                <?php foreach ($top10mahasiswas as $index => $mahasiswa): ?>
+                                    <li class="d-flex align-items-center mb-3">
+                                        <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"><?= ($index + 1) . 'th'; ?></span>
+                                        <span><?= $mahasiswa['name'] . ' - ' . $mahasiswa['score'] . ' Points'; ?></span>
+                                    </li>
+                                <?php endforeach; ?>
                             </ol>
                             <a href="#" class="buy-btn">Lihat Selengkapnya</a>
                         </div>
-                    </div><!-- End Pricing Item -->
-
+                    </div>
                     <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="1000">
-                        <div class="pricing-item">
+                        <div class="pricing-item featured">
                             <h3>TOP 10</h3>
-                            <h4><sup>Pembimbing</sup></h4>
+                            <h4><sup>Dosen</sup></h4>
                             <ol class="p-0" style="list-style: none;">
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #FFD700, #FFA500); width: 50px; text-align: center;">1st</span>
-                                    <span>Dr. Yan Watequlis S - 1000 Points</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #C0C0C0, #D3D3D3); width: 50px; text-align: center;">2nd</span>
-                                    <span>Ariadi Retno Ririd - 950 Points</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #CD7F32, #B8860B); width: 50px; text-align: center;">3rd</span>
-                                    <span>Atiqah Nurul Asri - 900 Points</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #4e54c8, #8f94fb); width: 50px; text-align: center;">4th</span>
-                                    <span>Eka Larasati Amalia - 850 Points</span>
-                                </li>
-                                <li class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, #4e54c8, #8f94fb); width: 50px; text-align: center;">5th</span>
-                                    <span>Ulla Delfana Rosiani - 800 Points</span>
-                                </li>
+                                <?php foreach ($top10dosen as $index => $dosen): ?>
+                                    <li class="d-flex align-items-center mb-3">
+                                        <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"><?= ($index + 1) . 'th'; ?></span>
+                                        <span><?= $dosen['name'] . ' - ' . $dosen['score'] . ' Points'; ?></span>
+                                    </li>
+                                <?php endforeach; ?>
                             </ol>
                             <a href="#" class="buy-btn">Lihat Selengkapnya</a>
                         </div>
-                    </div><!-- End Pricing Item -->
+                    </div>
                 </div>
 
             </div>
