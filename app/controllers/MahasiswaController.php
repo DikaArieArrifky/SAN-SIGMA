@@ -48,6 +48,9 @@ class MahasiswaController extends Controller
         }
     }
 
+    // public function count prestasis mahasiswa by nim
+
+
     // public function getDataPengumpulan()
     // {
     //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {

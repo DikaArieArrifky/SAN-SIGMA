@@ -6,6 +6,7 @@ let sidebariconopen = document.getElementById("sidebar-icon-open");
 let navOpen = document.getElementById("nav-open");
 let navClose = document.getElementById("nav-close");
 
+sidebarclose.style.display = "none";
 function setUiState(uiStateMap) {
   $.ajax({
     type: "POST",
@@ -48,7 +49,7 @@ function sidebarMax() {
   sidebariconopen.style.transform = "rotate(90deg)";
   sidebariconopen.style.display = "block";
   navOpen.style.display = "block";
-  navClose.style.display = "block";
+ 
 }
 
 // Add event listener to sidebar menu buttons
