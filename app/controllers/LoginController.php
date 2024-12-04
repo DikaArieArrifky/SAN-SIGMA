@@ -1,14 +1,17 @@
 <?php
 
 require_once 'app/models/Login.php';
+require_once 'app/models/Mahasiswa.php';
 
 class LoginController extends Controller
 {
     private $login;
+    private $mahasiswa;
 
     public function __construct()
     {
         $this->login = new Login(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+        $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index()
@@ -55,7 +58,11 @@ class LoginController extends Controller
                 $this->view('dosen/index', ['user' => $user]);
                 break;
             case 'mahasiswa':
-                $this->view('mahasiswa/index', ['user' => $user]);
+                $mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+                $user_id = $this->mahasiswa->getUserId(Session::get('username'));
+                Session::set('user_id', $user_id);
+                require_once 'app/controllers/MahasiswaController.php';
+                header("Location: mahasiswa/index");
                 break;
             default:
                 echo "Username atau Password Salah";

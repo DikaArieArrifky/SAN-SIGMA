@@ -11,5 +11,5 @@ define('CSS', BASE . '/assets/css/');
 define('JS', BASE . '/assets/js/');
 define('IMG', BASE . '/assets/img/');
 define('FONTS', BASE . '/assets/fonts/');
-define('VIEWS', '../app/views/');
+define('VIEWS', 'resources/views/');
 define ('VENDOR', BASE . '/assets/vendor/');
