@@ -2,12 +2,13 @@
 
 require_once 'app/core/Model.php';
 
-class Mahasiswa extends Model
+class Mahasiswa extends Model 
 {
     public function __construct($db)
     {
         parent::__construct($db);
     }
+    
     public function getMahasiswaByUserId($userId)
     {
         $query = $this->db->prepare("SELECT * FROM mahasiswas WHERE user_id = :user_id");
@@ -66,6 +67,17 @@ class Mahasiswa extends Model
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }
+
+    //update Section
+    public function updatePhoto($nim, $photo)
+    {
+        $query = $this->db->prepare("UPDATE mahasiswas SET photo = :photo WHERE nim = :nim");
+        $query->bindValue(":photo", $photo);
+        $query->bindValue(":nim", $nim);
+        $query->execute();
+    }
+
+
     
     
    

@@ -1,2 +1,3 @@
-<?php
-echo "Ini input mahasiswa";
+<body>
+    ini input
+</body>

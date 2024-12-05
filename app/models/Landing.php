@@ -7,7 +7,9 @@ class Landing extends Model
     public function __construct($db)
     {
         parent::__construct($db);
+        
     }
+
 
 
     public function getAllmahasiswas() {

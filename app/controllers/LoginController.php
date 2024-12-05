@@ -2,26 +2,39 @@
 
 require_once 'app/models/Login.php';
 require_once 'app/models/Mahasiswa.php';
+require_once 'app/models/Landing.php';
 
 class LoginController extends Controller
 {
     private $login;
     private $mahasiswa;
+    private $landing;
 
     public function __construct()
     {
         $this->login = new Login(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+        $this->landing = new Landing(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index()
     {
-        $this->view('landing/index', []);
+        // Fetch top 10 mahasiswas and dosen
+        $top10mahasiswas = $this->landing->getTop10mahasiswas();
+        $top10dosen = $this->landing->getTop10dosen();
+
+        // Pass the data to the view
+        $this->view('landing/index', [
+            'top10mahasiswas' => $top10mahasiswas,
+            'top10dosen' => $top10dosen
+        ]);
     }
+
     public function login()
     {
-        $this->view('login/index', ['']);
+        $this->view('login/index', []);
     }
+
     public function postLogin()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -37,7 +50,6 @@ class LoginController extends Controller
     {
         $role = $this->login->getRole(Session::get('username'), Session::get('password'));
         Session::set('role', $role);
-
 
         $user = $this->login->getUser(Session::get('username'), Session::get('password'), $role);
         if (!$role) {
@@ -66,13 +78,6 @@ class LoginController extends Controller
                 break;
             default:
                 echo "Username atau Password Salah";
-
-                // $username = Session::get('username');
-                // $password = Session::get('password');
-                // $level = Session::get('level');
-                // Session::destroy();
-                // Session::start();
-                // $this->view('login/index', ['not_found' => true, 'username' => $username, 'password' => $password, 'level' => $level]);
                 break;
         }
     }
