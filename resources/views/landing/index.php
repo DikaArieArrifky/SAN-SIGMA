@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -289,45 +288,21 @@
                 <div class="row gy-4">
 
                     <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="1000">
-                        <div class="pricing-item">
-                            <h3>Data Terbaru</h3>
-                            <h4><sup>Mahasiswa.</sup></h4>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">NO</th>
-                                        <th scope="col">Nama</th>
-                                        <th scope="col">Prestasi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Ahmad Firdaus</td>
-                                        <td>Juara KMIPN 2023</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Sarah Amalia</td>
-                                        <td>Best Paper PIMNAS</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Budi Santoso</td>
-                                        <td>Medali Emas GEMASTIK</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Putri Rahayu</td>
-                                        <td>Juara CodeJam 2023</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Reza Pratama</td>
-                                        <td>Winner WorldSkills</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="pricing-item featured">
+                            <h3>Prestasi Terbaru</h3>
+                            <h4><sup>Mahasiswa</sup></h4>
+                            <ol class="p-0" style="list-style: none;">
+                                <?php foreach ($data['top10NewVerifikasi'] as $index => $prestasi): ?>
+                                    <li class="d-flex align-items-center mb-3">
+                                        <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3"
+                                            style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); 
+                             width: 50px; text-align: center;">
+                                            <?= ($index + 1) . 'th'; ?>
+                                        </span>
+                                        <span><?= $prestasi['mahasiswa_name'] . ' - ' . $prestasi['judul'].' - '.$prestasi['tingkatan_name']; ?></span>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ol>
                             <a href="#" class="buy-btn">Lihat Selengkapnya</a>
                         </div>
                     </div>

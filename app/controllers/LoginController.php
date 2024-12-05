@@ -19,15 +19,21 @@ class LoginController extends Controller
 
     public function index()
     {
-        // Fetch top 10 mahasiswas and dosen
-        $top10mahasiswas = $this->landing->getTop10mahasiswas();
-        $top10dosen = $this->landing->getTop10dosen();
+        try {
+            // Fetch data
+            $top10mahasiswas = $this->landing->getTop10mahasiswas();
+            $top10dosen = $this->landing->getTop10dosen();
+            $top10NewVerifikasi = $this->landing->getTop10NewVerifikasi(); // Fixed variable name
 
-        // Pass the data to the view
-        $this->view('landing/index', [
-            'top10mahasiswas' => $top10mahasiswas,
-            'top10dosen' => $top10dosen
-        ]);
+            // Pass data to view
+            $this->view('landing/index', [
+                'top10mahasiswas' => $top10mahasiswas,
+                'top10dosen' => $top10dosen,
+                'top10NewVerifikasi' => $top10NewVerifikasi  // Fixed array key
+            ]);
+        } catch (Exception $e) {
+            $this->error(500, $e->getMessage());
+        }
     }
 
     public function login()

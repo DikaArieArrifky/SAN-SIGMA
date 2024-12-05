@@ -17,7 +17,6 @@
         flex-grow: 1;
 
         padding: 20px;
-        overflow-y: scroll;
     }
 
     .main-content .header {
@@ -58,7 +57,7 @@
     }
 
     .main-content .profile-section {
-        margin-top: 20px;
+       
         background-color: #fff;
         padding: 20px;
         border-radius: 8px;
@@ -154,6 +153,19 @@
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+    .submit-pw{
+        background-color: #4299e1;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 150px;
+        align-items: right;
+    }
+    .submit-pw:hover{
+        background-color: #2b6cb0;
+    }
 </style>
 </head>
 
@@ -168,17 +180,16 @@
                             </i>
                             <span style="font-size: 1.2em;">Profile</span>
                         </li>
-                        <li>
-                            <i class="fas fa-lock">
-                            </i>
-                            <span style="font-size: 1.2em;">Password</span>
-                        </li>
                     </ul>
+                    <button style="background: none; border: none; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; padding: 3px 37px; background-color: #f0f4f8; border-radius: 4px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" data-toggle="modal" data-target="#modal-pw">
+                        <i class="fas fa-lock" style="font-size: 1.2em; color: #007bff;"></i>
+                        <span style="font-size: 1.2em; margin-left: 5px; color: #007bff;">Password</span>
+                    </button>
                 </div>
                 <form action="uploadPhoto" method="post" enctype="multipart/form-data" class="profile-content">
                     <div class="profile-header">
                         <div class="profile-title" style="
-                            margin-left: 120px;
+                            margin-left: 145px;
                             font-size: 28px;
                             font-weight: 600;
                             color: #2d3748;
@@ -267,3 +278,53 @@
     </div>
     </form>
 </body>
+<style>
+    .profile-title {
+        font-size: 28px;
+        font-weight: 600;
+        color: #2d3748;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding-bottom: 5px;
+        border-bottom: 3px solid #4299e1;
+        display: inline-block;
+    }
+</style>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<div id="modal-pw" class="modal fade" role="dialog">
+
+    <div class="container">
+        <div class="main-content">
+            <div class="profile-section">
+                <form action="uploadPhoto" method="post" enctype="multipart/form-data" class="profile-content">
+                    <div class="profile-content">
+                        <div class="profile-title">
+                            Ganti Password
+                        </div>
+                        <button type="button" class="close" data-dismiss="modal" style="font-size: 30px; margin: 10px;">&times;</button>
+                        <div class="profile-form">
+                            <label for="password-lama">
+                                Masukan Password Lama <span style="color: red;">*</span>
+                            </label>
+                            <input id="password-lama" type="password" name="password-lama" placeholder="**********" required="true">
+                            <div class="password-baru">
+                                <hr style="border-color: #4299e1; border-width: 3px;">
+                            </div>
+                            <label for="password-baru">
+                                Masukan Password Baru <span style="color: red;">*</span>
+                            </label>
+                            <input id="password-baru" type="password" name="password-baru" placeholder="**********" required="true">
+                            <label for="password-baru-verif">
+                                Ulangi Password <span style="color: red;">*</span>
+                            </label>
+                            <input id="password-baru-verif" type="password" name="password-baru-verif" placeholder="**********" required="true">
+                            <input type="submit" value="Ganti Password" class="submit-pw">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
