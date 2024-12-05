@@ -175,8 +175,7 @@
                         </li>
                     </ul>
                 </div>
-
-                <div class="profile-content">
+                <form action="uploadPhoto" method="post" enctype="multipart/form-data" class="profile-content">
                     <div class="profile-header">
                         <div class="profile-title" style="
                             margin-left: 120px;
@@ -192,76 +191,79 @@
                             Biodata
                         </div>
                         <img alt="Profile Picture" height="80"
-                           src="<?= ($data['mahasiswa']['photo']) ? IMG.'/person/'.$data['mahasiswa']['photo'] : 'https://api.dicebear.com/6.x/avataaars/svg?seed='.rand() ?>"
-                            width="80" onclick="window.open(this.src, '_blank')"/>
-        
+                            src="<?= ($data['mahasiswa']['photo']) ? IMG . '/person/' . $data['mahasiswa']['photo'] : 'https://api.dicebear.com/6.x/avataaars/svg?seed=' . rand() ?>"
+                            width="80" onclick="window.open(this.src, '_blank')" />
                         <label for="photo-upload" class="edit-icon" style="cursor: pointer;">
                             <i class="fas fa-edit"></i>
                         </label>
-                        <input type="file" 
-                               id="photo-upload" 
-                               name="photo" 
-                               accept="image/*" 
-                               style="display: none;"
-                               onchange="this.form.submit()">
+                        <input type="file"
+                            id="photo-upload"
+                            name="photo"
+                            accept="image/*"
+                            style="display: none;"
+                            onchange="this.form.submit()">
+                        <input type="hidden" name="nim" value="<?= $data['mahasiswa']['nim'] ?>">
                     </div>
-                    <div class="profile-form " >
-                        <label for="nama-mahasiswa">
-                            Nama Mahasiswa
-                        </label>
-                        <input id="nama-mahasiswa" readonly="" type="text" value="<?= $data['mahasiswa']['name'] ?>">
 
-                        <label for="nim">
-                            NIM
-                        </label>
-                        
-                        <input id="nim" readonly="" type="text" value="<?= $data['mahasiswa']['nim'] ?>">
-                        <label for="nim">
-                            Program Studi
-                        </label>
-                        <input id="prodi" readonly="" type="text" value="<?=  $data['mahasiswa']['prodi'] ?>">
-                        <label for="gender">
-                            Jenis Kelamin
-                        </label>
-                        <input id="gender" readonly="" type="text"  value="<?= ($data['mahasiswa']['gender'] ?? '') === 'L' ? 'Laki-Laki' : 'Perempuan' ?>">
+                    <div class="profile-content">
 
-                        <label for="status">
-                            Status
-                        </label>
-                        <input id="status" readonly="" type="text"  value="<?= ($data['mahasiswa']['status'] ?? '') === 'aktif' ? 'Mahasiswa Aktif' : 'Mahasiswa Tidak Aktif' ?>">
+                        <div class="profile-form ">
+                            <label for="nama-mahasiswa">
+                                Nama Mahasiswa
+                            </label>
+                            <input id="nama-mahasiswa" readonly="" type="text" value="<?= $data['mahasiswa']['name'] ?>">
 
-                        <label for="college-year">
-                            Tahun Angkatan
-                        </label>
-                        <input id="college-year" readonly="" type="text"   value="<?= htmlspecialchars($data['mahasiswa']['college_year'] ?? '') ?>">
-                        <label for="">
-                            Alamat
-                        </label>
-                        <input id="alamat" readonly="" type="text"  value="<?= htmlspecialchars($data['mahasiswa']['alamat'] ?? '') ?>">
-                        <label for="kota">
-                            Kota
-                        </label>
-                        <input id="kota" readonly="" type="text"value="<?= htmlspecialchars($data['mahasiswa']['kota'] ?? '') ?>">
-                        <label for="provinsi">
-                            Provinsi
-                        </label>
-                        <input id="provinsi" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['provinsi'] ?? '') ?>">
-                        <label for="no-telepon">
-                            No. Telepon
-                        </label>
-                        <input id="no-telepon" readonly="" type="text"value="<?= htmlspecialchars($data['mahasiswa']['alamat'] ?? '') ?>">
-                        <label for="agama">
-                            Agama
-                        </label>
-                        <input id="agama" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['agama'] ?? '') ?>">
-                        <label for="skor">
-                            Skor
-                        </label>
-                        <input id="skor" readonly="" type="text"value="<?= htmlspecialchars($data['mahasiswa']['score'] ?? '') ?>">
+                            <label for="nim">
+                                NIM
+                            </label>
+
+                            <input id="nim" readonly="" type="text" value="<?= $data['mahasiswa']['nim'] ?>">
+                            <label for="nim">
+                                Program Studi
+                            </label>
+                            <input id="prodi" readonly="" type="text" value="<?= $data['mahasiswa']['prodi'] ?>">
+                            <label for="gender">
+                                Jenis Kelamin
+                            </label>
+                            <input id="gender" readonly="" type="text" value="<?= ($data['mahasiswa']['gender'] ?? '') === 'L' ? 'Laki-Laki' : 'Perempuan' ?>">
+
+                            <label for="status">
+                                Status
+                            </label>
+                            <input id="status" readonly="" type="text" value="<?= ($data['mahasiswa']['status'] ?? '') === 'aktif' ? 'Mahasiswa Aktif' : 'Mahasiswa Tidak Aktif' ?>">
+
+                            <label for="college-year">
+                                Tahun Angkatan
+                            </label>
+                            <input id="college-year" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['college_year'] ?? '') ?>">
+                            <label for="">
+                                Alamat
+                            </label>
+                            <input id="alamat" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['alamat'] ?? '') ?>">
+                            <label for="kota">
+                                Kota
+                            </label>
+                            <input id="kota" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['kota'] ?? '') ?>">
+                            <label for="provinsi">
+                                Provinsi
+                            </label>
+                            <input id="provinsi" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['provinsi'] ?? '') ?>">
+                            <label for="no-telepon">
+                                No. Telepon
+                            </label>
+                            <input id="no-telepon" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['alamat'] ?? '') ?>">
+                            <label for="agama">
+                                Agama
+                            </label>
+                            <input id="agama" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['agama'] ?? '') ?>">
+                            <label for="skor">
+                                Skor
+                            </label>
+                            <input id="skor" readonly="" type="text" value="<?= htmlspecialchars($data['mahasiswa']['score'] ?? '') ?>">
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
-    </div>
+    </form>
 </body>

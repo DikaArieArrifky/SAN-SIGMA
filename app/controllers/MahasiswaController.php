@@ -11,6 +11,7 @@ class MahasiswaController extends Controller
 {
     private $mahasiswa;
     private $haveScore;
+    
 
     public function __construct()
     {
@@ -63,6 +64,7 @@ class MahasiswaController extends Controller
             // Handle error appropriately
             $this->error(500, $e->getMessage());
         }
+       
     }
     
     public function uploadPhoto()
@@ -70,21 +72,38 @@ class MahasiswaController extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['photo'])) {
             try {
                 $file = $_FILES['photo'];
-                $uploadDir = 'public/img/person/';
+                $nim = $_POST['nim'];
                 
-                // Create directory if it doesn't exist
+                // Validate image
+                $check = getimagesize($file['tmp_name']);
+                if ($check === false) {
+                    throw new Exception("File is not an image");
+                }
+    
+                // Validate file size (max 5MB)
+                if ($file['size'] > 5242880) {
+                    throw new Exception("File is too large. Maximum size is 5MB");
+                }
+    
+                // Validate file type
+                $allowed = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!in_array($file['type'], $allowed)) {
+                    throw new Exception("Invalid file type. Only JPG, JPEG & PNG files are allowed");
+                }
+    
+                $uploadDir = 'public/img/person/';
                 if (!file_exists($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
     
                 // Generate unique filename
-                $filename = uniqid() . '_' . basename($file['name']);
-                $uploadFile = $uploadDir . $filename;
+                $filename = ($file['name']);
+                $uploadFile = $filename;
     
-                // Validate image
-                $check = getimagesize($file['tmp_name']);
-                if ($check === false) {
-                    throw new Exception("File is not an image");
+                // Delete old photo if exists
+                $oldPhoto = $this->mahasiswa->getPhotoByNim($nim);
+                if ($oldPhoto && file_exists($uploadDir . $oldPhoto)) {
+                    unlink($uploadDir . $oldPhoto);
                 }
     
                 // Move uploaded file
@@ -93,10 +112,10 @@ class MahasiswaController extends Controller
                 }
     
                 // Update database
-                $this->mahasiswa->updatePhoto($_SESSION['user_id'], $filename);
+                $this->mahasiswa->updatePhoto($nim, $filename);
     
                 // Redirect back to profile
-                header('Location: ?screen=profile');
+                header('Location:screen?screen=profile');
                 exit();
     
             } catch (Exception $e) {

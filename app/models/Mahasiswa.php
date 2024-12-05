@@ -76,9 +76,24 @@ class Mahasiswa extends Model
         $query->bindValue(":nim", $nim);
         $query->execute();
     }
-
-
-    
-    
-   
+    public function getPhotoByNim($nim) 
+{
+    try {
+        $query = $this->db->prepare("
+            SELECT photo 
+            FROM mahasiswas 
+            WHERE nim = :nim
+        ");
+        
+        $query->bindValue(":nim", $nim);
+        $query->execute();
+        
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['photo'] : null;
+        
+    } catch (PDOException $e) {
+        error_log("Error fetching photo: " . $e->getMessage());
+        return null;
+    }
+}
 }
