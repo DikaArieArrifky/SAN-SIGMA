@@ -1,5 +1,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
     body {
         font-family: 'Roboto', sans-serif;
@@ -57,7 +62,7 @@
     }
 
     .main-content .profile-section {
-       
+
         background-color: #fff;
         padding: 20px;
         border-radius: 8px;
@@ -153,7 +158,8 @@
         border-radius: 4px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    .submit-pw{
+
+    .submit-pw {
         background-color: #4299e1;
         color: white;
         padding: 10px;
@@ -163,7 +169,8 @@
         width: 150px;
         align-items: right;
     }
-    .submit-pw:hover{
+
+    .submit-pw:hover {
         background-color: #2b6cb0;
     }
 </style>
@@ -290,41 +297,98 @@
         display: inline-block;
     }
 </style>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <div id="modal-pw" class="modal fade" role="dialog">
 
     <div class="container">
         <div class="main-content">
             <div class="profile-section">
-                <form action="uploadPhoto" method="post" enctype="multipart/form-data" class="profile-content">
-                    <div class="profile-content">
-                        <div class="profile-title">
-                            Ganti Password
-                        </div>
-                        <button type="button" class="close" data-dismiss="modal" style="font-size: 30px; margin: 10px;">&times;</button>
-                        <div class="profile-form">
+
+                <div class="profile-content">
+                    <div class="profile-title">
+                        Ganti Password
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" style="font-size: 30px; margin: 10px;">&times;</button>
+                    <div class="profile-form">
+                        <form action="changePassword" method="post" class="profile-form">
                             <label for="password-lama">
                                 Masukan Password Lama <span style="color: red;">*</span>
                             </label>
-                            <input id="password-lama" type="password" name="password-lama" placeholder="**********" required="true">
+                            <input id="password-lama" type="password" name="password-lama"
+                                placeholder="**********" required>
+
                             <div class="password-baru">
                                 <hr style="border-color: #4299e1; border-width: 3px;">
                             </div>
+
                             <label for="password-baru">
                                 Masukan Password Baru <span style="color: red;">*</span>
                             </label>
-                            <input id="password-baru" type="password" name="password-baru" placeholder="**********" required="true">
+                            <input id="password-baru" type="password" name="password-baru"
+                                placeholder="**********" required>
+
                             <label for="password-baru-verif">
                                 Ulangi Password <span style="color: red;">*</span>
                             </label>
-                            <input id="password-baru-verif" type="password" name="password-baru-verif" placeholder="**********" required="true">
-                            <input type="submit" value="Ganti Password" class="submit-pw">
-                        </div>
+                            <input id="password-baru-verif" type="password" name="password-baru-verif"
+                                placeholder="**********" required>
+
+                            <button type="submit" class="submit-pw">Ganti Password</button>
+
+                            <?php if (isset($_GET['error'])): ?>
+                                <div class="error-message" style="color: red; margin-top: 10px;">
+                                    <?= htmlspecialchars($_GET['error']) ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if (isset($_GET['message'])): ?>
+                                <div class="success-message" style="color: green; margin-top: 10px;">
+                                    <?= htmlspecialchars($_GET['message']) ?>
+                                </div>
+                            <?php endif; ?>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<!-- Add SweetAlert2 CDN in head section -->
+
+
+<!-- Replace PHP messages with JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    const message = urlParams.get('message');
+
+    // Show error popup
+    if (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: error,
+            confirmButtonColor: '#d33',
+            timer: 3000
+        });
+    }
+
+    // Show success popup
+    if (message) {
+        Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: message,
+            confirmButtonColor: '#3085d6',
+            timer: 3000
+        });
+    }
+    
+    // Clear URL parameters after showing popup
+    if (error || message) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
+</script>

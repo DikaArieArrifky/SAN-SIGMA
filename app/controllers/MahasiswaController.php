@@ -10,7 +10,7 @@ require_once 'app/models/Mahasiswa.php';
 class MahasiswaController extends Controller
 {
     private $mahasiswa;
-    private $haveScore;
+
     
 
     public function __construct()
@@ -24,7 +24,6 @@ class MahasiswaController extends Controller
         try {
             // Fetch mahasiswa data
             $mahasiswaData = $this->mahasiswa->getMahasiswaByUserId($_SESSION['user_id']);
-            
             if (!$mahasiswaData) {
                 throw new Exception("Mahasiswa data not found");
             }
@@ -55,6 +54,9 @@ class MahasiswaController extends Controller
                 ],
                 "haveScore" => [
                     "count" => $this->mahasiswa->getMahasiswaWhoHaveScore()
+                ],
+                "passwordLama" =>[
+                    "password" => $this->mahasiswa->getPasswordByUserId($_SESSION['user_id'])
                 ]
             ];
 
@@ -143,6 +145,41 @@ class MahasiswaController extends Controller
             $this->index($screen);
         }
     }
+
+    public function changePassword() 
+{
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        try {
+            $oldPassword = $_POST['password-lama'];
+            $newPassword = $_POST['password-baru'];
+            $verifPassword = $_POST['password-baru-verif'];
+            
+            // Get stored password
+            $storedPassword = $this->mahasiswa->getPasswordByUserId($_SESSION['user_id']);
+            
+            // Validate old password
+            if ($oldPassword !== $storedPassword) {
+                throw new Exception("Password lama tidak sesuai");
+            }
+
+            $this->mahasiswa->changePasswordByUserId(
+                $_SESSION['user_id'],
+                $verifPassword,
+                $newPassword,
+                $oldPassword
+            );
+
+            // Redirect with success message
+            header('Location: screen?screen=profile&message=Password berhasil diubah');
+            exit();
+
+        } catch (Exception $e) {
+            // Redirect with error message
+            header('Location: screen?screen=profile&error=' . urlencode($e->getMessage()));
+            exit();
+        }
+    }
+}
 
     
 
