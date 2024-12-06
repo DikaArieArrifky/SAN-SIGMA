@@ -9,3 +9,4 @@ Options +Indexes
 <FilesMatch "\.(zip|pdf)$">
     Header unset Cache-Control
 </FilesMatch>
+  
