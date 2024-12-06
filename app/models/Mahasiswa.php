@@ -173,4 +173,40 @@ class Mahasiswa extends Model implements IUserApp
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getTingkatanLomba()
+    {
+        $query = $this->db->prepare("SELECT id, nama FROM tingkatans WHERE visible_tingkatans = 1");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPeringkatLomba()
+    {
+        $query = $this->db->prepare("SELECT * FROM peringkats  WHERE visible_peringkats = 1");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function calculateScore($tingkatId, $peringkatId)
+    {
+        $query = $this->db->prepare("SELECT multiple FROM peringkats WHERE id = :peringkat_id");
+        $query->bindValue(":peringkat_id", $peringkatId);
+        $query->execute();
+        $peringkat = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$peringkat) {
+            throw new Exception("Peringkat not found");
+        }
+
+        $query = $this->db->prepare("SELECT point FROM tingkatans WHERE id = :tingkat_id");
+        $query->bindValue(":tingkat_id", $tingkatId);
+        $query->execute();
+        $tingkat = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$tingkat) {
+            throw new Exception("Tingkat not found");
+        }
+
+        return $peringkat['multiple'] * $tingkat['point'];
+    }
+    
 }
+

@@ -3,14 +3,13 @@
 // require_once '../app/models/Admin.php';
 require_once 'app/models/Mahasiswa.php';
 require_once 'app/core/Database.php';
-require_once 'app/models/Mahasiswa.php';
-// require_once '../app/models/Dokumen.php';
+
 
 
 class MahasiswaController extends Controller
 {
     private $mahasiswa;
-
+    private $db;
 
 
     public function __construct()
@@ -60,7 +59,11 @@ class MahasiswaController extends Controller
                 "passwordLama" => [
                     "password" => $this->mahasiswa->getPasswordByUserId($_SESSION['user_id'])
                 ],
-                "verifikasiPenghargaan" => $this->mahasiswa->getVerifikasiAndPenghargaanByNim($mahasiswaData['nim'])
+                "verifikasiPenghargaan" => $this->mahasiswa->getVerifikasiAndPenghargaanByNim($mahasiswaData['nim']),
+
+                "tingkat" => $this->mahasiswa->getTingkatanLomba(),
+                "peringkat" => $this->mahasiswa->getPeringkatLomba(),
+                
 
 
             ];
@@ -206,8 +209,38 @@ class MahasiswaController extends Controller
         }
     }
 
-
-
+    // calculate score
+    public function calculateScore()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                header('Content-Type: application/json');
+                ob_clean();
+                
+                $tingkatId = filter_input(INPUT_POST, 'tingkat_id', FILTER_SANITIZE_NUMBER_INT);
+                $peringkatId = filter_input(INPUT_POST, 'peringkat_id', FILTER_SANITIZE_NUMBER_INT);
+                
+                if (!$tingkatId || !$peringkatId) {
+                    throw new Exception('Missing required parameters');
+                }
+                
+                // Use $this->mahasiswa instead of direct DB query
+                $score = $this->mahasiswa->calculateScore($tingkatId, $peringkatId);
+                
+                die(json_encode([
+                    'success' => true,
+                    'score' => floatval($score)
+                ]));
+                
+            } catch (Exception $e) {
+                http_response_code(500);
+                die(json_encode([
+                    'success' => false,
+                    'message' => $e->getMessage()
+                ]));
+            }
+        }
+    }
 
 
 
