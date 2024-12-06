@@ -69,7 +69,10 @@ class MahasiswaController extends Controller
 
         } catch (Exception $e) {
             // Handle error appropriately
-            $this->error(500, $e->getMessage());
+           //alert js exception
+            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
+            exit();
         }
     }
 
