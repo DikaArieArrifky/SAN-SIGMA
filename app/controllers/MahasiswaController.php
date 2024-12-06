@@ -106,40 +106,45 @@ class MahasiswaController extends Controller
                     throw new Exception("File is too large. Maximum size is 5MB");
                 }
 
-                // Validate file type
+                // cek tipe file
                 $allowed = ['image/jpeg', 'image/png', 'image/jpg'];
                 if (!in_array($file['type'], $allowed)) {
                     throw new Exception("Invalid file type. Only JPG, JPEG & PNG files are allowed");
                 }
 
-                $uploadDir = 'public/img/person/';
+                $uploadDir = dirname(__DIR__, 2) . '/assets/img/person/';
                 if (!file_exists($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
 
+
                 // Generate unique filename
                 $filename = ($file['name']);
-                $uploadFile = $filename;
+                $uploadFile = $uploadDir . $filename;
 
                 // Delete old photo if exists
                 $oldPhoto = $this->mahasiswa->getPhotoByNim($nim);
                 if ($oldPhoto && file_exists($uploadDir . $oldPhoto)) {
                     unlink($uploadDir . $oldPhoto);
                 }
+                
 
                 // Move uploaded file
                 if (!move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     throw new Exception("Failed to upload file");
                 }
-
+                consoleLog('uploadFile', $uploadFile);
+                consoleLog('moveFile', move_uploaded_file($file['tmp_name'], $uploadFile));
                 // Update database
                 $this->mahasiswa->updatePhoto($nim, $filename);
 
                 // Redirect back to profile
-                header('Location:screen?screen=profile');
+                header('Location: screen?screen=profile');
                 exit();
             } catch (Exception $e) {
-                $this->error(500, $e->getMessage());
+                echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+                echo '<script>setTimeout(function(){ window.location.href = "screen?screen=profile"; }, 10);</script>';
+                exit();
             }
         }
     }
