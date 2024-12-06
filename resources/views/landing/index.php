@@ -1,20 +1,3 @@
-<?php
-require_once 'app/models/Landing.php';
-require_once 'app/core/Database.php';
-
-// Initialize the database connection
-$dbConfig = getDatabaseConfig(); // Assuming you have a function to get the database configuration
-$db = Database::getInstance(getDatabaseConfig(), [$this, 'error']);
-
-// Create an instance of the Landing model
-$landingModel = new Landing($db);
-
-// Fetch the top 10 mahasiswas
-$top10mahasiswas = $landingModel->getTop10mahasiswas();
-
-//fetsch top 10 dosen
-$top10dosen = $landingModel->getTop10dosen();
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -243,7 +226,7 @@ $top10dosen = $landingModel->getTop10dosen();
                     <div class="col-xl-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="1000">
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-people-fill"></i></div>
-                            <h4><a href="#" class="stretched-link">C.R.U.D Data Mahasiswa</a></h4>
+                            <h4><a href="#" class="stretched-link">Sentralilasi Data Mahasiswa</a></h4>
                             <p>Sistem ini akan mencatat data mahasiswa yang nantinya akan mengajukan verifikasi prestasinya.</p>
                         </div>
                     </div><!-- End Service Item -->
@@ -251,7 +234,7 @@ $top10dosen = $landingModel->getTop10dosen();
                     <div class="col-xl-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="1000">
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-patch-check-fill"></i></div>
-                            <h4><a href="#" class="stretched-link">Verifikasi Mahasiswa </a></h4>
+                            <h4><a href="#" class="stretched-link">Verifikasi Prestasi Mahasiswa </a></h4>
                             <p>Sistem juga dapat melakukan verifikasi prestasi oleh dosen pembimbing dan admin jurusan.</p>
                         </div>
                     </div><!-- End Service Item -->
@@ -259,7 +242,7 @@ $top10dosen = $landingModel->getTop10dosen();
                     <div class="col-xl-4 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="1000">
                         <div class="service-item position-relative">
                             <div class="icon"><i class="bi bi-person-badge-fill"></i></div>
-                            <h4><a href="#" class="stretched-link">C.R.U.D Data Dosen</a></h4>
+                            <h4><a href="#" class="stretched-link">Sentralilasi Data Mahasiswa</a></h4>
                             <p>Sistem ini akan mencatat data dosen yang nantinya akan melakukan verifikasi prestasi.</p>
                         </div>
                     </div><!-- End Service Item -->
@@ -305,45 +288,21 @@ $top10dosen = $landingModel->getTop10dosen();
                 <div class="row gy-4">
 
                     <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="1000">
-                        <div class="pricing-item">
-                            <h3>Data Terbaru</h3>
-                            <h4><sup>Mahasiswa.</sup></h4>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">NO</th>
-                                        <th scope="col">Nama</th>
-                                        <th scope="col">Prestasi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Ahmad Firdaus</td>
-                                        <td>Juara KMIPN 2023</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2</td>
-                                        <td>Sarah Amalia</td>
-                                        <td>Best Paper PIMNAS</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3</td>
-                                        <td>Budi Santoso</td>
-                                        <td>Medali Emas GEMASTIK</td>
-                                    </tr>
-                                    <tr>
-                                        <td>4</td>
-                                        <td>Putri Rahayu</td>
-                                        <td>Juara CodeJam 2023</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5</td>
-                                        <td>Reza Pratama</td>
-                                        <td>Winner WorldSkills</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <div class="pricing-item featured">
+                            <h3>Prestasi Terbaru</h3>
+                            <h4><sup>Mahasiswa</sup></h4>
+                            <ol class="p-0" style="list-style: none;">
+                                <?php foreach ($data['top10NewVerifikasi'] as $index => $prestasi): ?>
+                                    <li class="d-flex align-items-center mb-3">
+                                        <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3"
+                                            style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); 
+                             width: 50px; text-align: center;">
+                                            <?= ($index + 1) . 'th'; ?>
+                                        </span>
+                                        <span><?= $prestasi['mahasiswa_name'] . ' - ' . $prestasi['judul'].' - '.$prestasi['tingkatan_name']; ?></span>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ol>
                             <a href="#" class="buy-btn">Lihat Selengkapnya</a>
                         </div>
                     </div>
@@ -353,7 +312,7 @@ $top10dosen = $landingModel->getTop10dosen();
                             <h3>TOP 10</h3>
                             <h4><sup>Mahasiswa</sup></h4>
                             <ol class="p-0" style="list-style: none;">
-                                <?php foreach ($top10mahasiswas as $index => $mahasiswa): ?>
+                                <?php foreach ($data['top10mahasiswas'] as $index => $mahasiswa): ?>
                                     <li class="d-flex align-items-center mb-3">
                                         <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"><?= ($index + 1) . 'th'; ?></span>
                                         <span><?= $mahasiswa['name'] . ' - ' . $mahasiswa['score'] . ' Points'; ?></span>
@@ -368,7 +327,7 @@ $top10dosen = $landingModel->getTop10dosen();
                             <h3>TOP 10</h3>
                             <h4><sup>Dosen</sup></h4>
                             <ol class="p-0" style="list-style: none;">
-                                <?php foreach ($top10dosen as $index => $dosen): ?>
+                                <?php foreach ($data['top10dosen'] as $index => $dosen): ?>
                                     <li class="d-flex align-items-center mb-3">
                                         <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"><?= ($index + 1) . 'th'; ?></span>
                                         <span><?= $dosen['name'] . ' - ' . $dosen['score'] . ' Points'; ?></span>

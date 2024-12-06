@@ -1,17 +1,4 @@
-<?php
-require_once 'app/models/Mahasiswa.php';
-require_once 'app/core/Database.php';
 
-$db = Database::getInstance(getDatabaseConfig(), [$this, 'error']);
-$mahasiswaModel = new Mahasiswa($db);
-
-$mahasiswa = $mahasiswaModel->getMahasiswaByUserId($_SESSION['user_id']);
-$mahasiswa['prodi'] = $mahasiswaModel->getProdiNameByMahasiswaProdiId($mahasiswa['prodi_id']);
-$mahasiswa['count'] = $mahasiswaModel->getMahasiswaByNim($mahasiswa['nim']);
-$mahasiswa['countTerverifikasi'] = $mahasiswaModel->getMahasiswaTerverifikasiByNim($mahasiswa['nim']);
-$mahasiswa['rank'] = $mahasiswaModel->getRankNoMahasiswa($mahasiswa['nim']);
-$haveScore['count'] = $mahasiswaModel->getMahasiswaWhoHaveScore();
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,7 +29,7 @@ $haveScore['count'] = $mahasiswaModel->getMahasiswaWhoHaveScore();
             </div>
 
             <!-- Dashboard Content -->
-            <main class="flex-1 p-6 bg-gray-100">
+            <main class="flex-1 p-6 bg-gray-100 overflow-auto">
             <?php include_once VIEWS . "mahasiswa/screen/".$data['screen'].".php"; ?>
 
             </main>
