@@ -187,11 +187,12 @@
                             </i>
                             <span style="font-size: 1.2em;">Profile</span>
                         </li>
-                    </ul>
-                    <button style="background: none; border: none; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; padding: 3px 37px; background-color: #f0f4f8; border-radius: 4px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" data-toggle="modal" data-target="#modal-pw">
-                        <i class="fas fa-lock" style="font-size: 1.2em; color: #007bff;"></i>
+                        <li style="background: none; border: none; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; background-color: #f0f4f8; border-radius: 4px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);" data-toggle="modal" data-target="#modal-pw" type="buton">
+                        <i class="fas fa-lock" style="font-size: 1.2em; color: #007bff;  align-items: left"></i>
                         <span style="font-size: 1.2em; margin-left: 5px; color: #007bff;">Password</span>
-                    </button>
+                    </li>
+                    </ul>
+                   
                 </div>
                 <form action="uploadPhoto" method="post" enctype="multipart/form-data" class="profile-content">
                     <div class="profile-header">
@@ -295,6 +296,7 @@
         padding-bottom: 5px;
         border-bottom: 3px solid #4299e1;
         display: inline-block;
+        margin-bottom: 15px;
     }
 </style>
 
@@ -311,7 +313,7 @@
                     <button type="button" class="close" data-dismiss="modal" style="font-size: 30px; margin: 10px;">&times;</button>
                     <div class="profile-form">
                         <form action="changePassword" method="post" class="profile-form">
-                            <label for="password-lama">
+                            <label for="password-lama ">
                                 Masukan Password Lama <span style="color: red;">*</span>
                             </label>
                             <input id="password-lama" type="password" name="password-lama"
@@ -332,6 +334,15 @@
                             </label>
                             <input id="password-baru-verif" type="password" name="password-baru-verif"
                                 placeholder="**********" required>
+
+                            <?php
+                            // Anti-injection
+                            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                                $passwordLama = htmlspecialchars($_POST['password-lama'], ENT_QUOTES, 'UTF-8');
+                                $passwordBaru = htmlspecialchars($_POST['password-baru'], ENT_QUOTES, 'UTF-8');
+                                $passwordBaruVerif = htmlspecialchars($_POST['password-baru-verif'], ENT_QUOTES, 'UTF-8');
+                            }
+                            ?>
 
                             <button type="submit" class="submit-pw">Ganti Password</button>
 

@@ -11,7 +11,7 @@ class MahasiswaController extends Controller
 {
     private $mahasiswa;
 
-    
+
 
     public function __construct()
     {
@@ -24,6 +24,8 @@ class MahasiswaController extends Controller
         try {
             // Fetch mahasiswa data
             $mahasiswaData = $this->mahasiswa->getMahasiswaByUserId($_SESSION['user_id']);
+
+
             if (!$mahasiswaData) {
                 throw new Exception("Mahasiswa data not found");
             }
@@ -55,9 +57,12 @@ class MahasiswaController extends Controller
                 "haveScore" => [
                     "count" => $this->mahasiswa->getMahasiswaWhoHaveScore()
                 ],
-                "passwordLama" =>[
+                "passwordLama" => [
                     "password" => $this->mahasiswa->getPasswordByUserId($_SESSION['user_id'])
-                ]
+                ],
+                "verifikasiPenghargaan" => $this->mahasiswa->getVerifikasiAndPenghargaanByNim($mahasiswaData['nim'])
+
+
             ];
 
             $this->view('mahasiswa/index', $data);
@@ -66,60 +71,73 @@ class MahasiswaController extends Controller
             // Handle error appropriately
             $this->error(500, $e->getMessage());
         }
-       
     }
-    
+
+    // show riwayat mahasiswa
+    public function getVerifikasiDetail()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+        try {
+            $verifikasiId = $_POST['id'];
+            $detail = $this->mahasiswa->getVerifikasiAndPenghargaanByIdVerifikasi($verifikasiId);
+            echo json_encode($detail);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
+    }
+}
+
     public function uploadPhoto()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['photo'])) {
             try {
                 $file = $_FILES['photo'];
                 $nim = $_POST['nim'];
-                
+
                 // Validate image
                 $check = getimagesize($file['tmp_name']);
                 if ($check === false) {
                     throw new Exception("File is not an image");
                 }
-    
+
                 // Validate file size (max 5MB)
                 if ($file['size'] > 5242880) {
                     throw new Exception("File is too large. Maximum size is 5MB");
                 }
-    
+
                 // Validate file type
                 $allowed = ['image/jpeg', 'image/png', 'image/jpg'];
                 if (!in_array($file['type'], $allowed)) {
                     throw new Exception("Invalid file type. Only JPG, JPEG & PNG files are allowed");
                 }
-    
+
                 $uploadDir = 'public/img/person/';
                 if (!file_exists($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
-    
+
                 // Generate unique filename
                 $filename = ($file['name']);
                 $uploadFile = $filename;
-    
+
                 // Delete old photo if exists
                 $oldPhoto = $this->mahasiswa->getPhotoByNim($nim);
                 if ($oldPhoto && file_exists($uploadDir . $oldPhoto)) {
                     unlink($uploadDir . $oldPhoto);
                 }
-    
+
                 // Move uploaded file
                 if (!move_uploaded_file($file['tmp_name'], $uploadFile)) {
                     throw new Exception("Failed to upload file");
                 }
-    
+
                 // Update database
                 $this->mahasiswa->updatePhoto($nim, $filename);
-    
+
                 // Redirect back to profile
                 header('Location:screen?screen=profile');
                 exit();
-    
             } catch (Exception $e) {
                 $this->error(500, $e->getMessage());
             }
@@ -146,42 +164,41 @@ class MahasiswaController extends Controller
         }
     }
 
-    public function changePassword() 
-{
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        try {
-            $oldPassword = $_POST['password-lama'];
-            $newPassword = $_POST['password-baru'];
-            $verifPassword = $_POST['password-baru-verif'];
-            
-            // Get stored password
-            $storedPassword = $this->mahasiswa->getPasswordByUserId($_SESSION['user_id']);
-            
-            // Validate old password
-            if ($oldPassword !== $storedPassword) {
-                throw new Exception("Password lama tidak sesuai");
+    public function changePassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $oldPassword = $_POST['password-lama'];
+                $newPassword = $_POST['password-baru'];
+                $verifPassword = $_POST['password-baru-verif'];
+
+                // Get stored password
+                $storedPassword = $this->mahasiswa->getPasswordByUserId($_SESSION['user_id']);
+
+                // Validate old password
+                if ($oldPassword !== $storedPassword) {
+                    throw new Exception("Password lama tidak sesuai");
+                }
+
+                $this->mahasiswa->changePasswordByUserId(
+                    $_SESSION['user_id'],
+                    $verifPassword,
+                    $newPassword,
+                    $oldPassword
+                );
+
+                // Redirect with success message
+                header('Location: screen?screen=profile&message=Password berhasil diubah');
+                exit();
+            } catch (Exception $e) {
+                // Redirect with error message
+                header('Location: screen?screen=profile&error=' . urlencode($e->getMessage()));
+                exit();
             }
-
-            $this->mahasiswa->changePasswordByUserId(
-                $_SESSION['user_id'],
-                $verifPassword,
-                $newPassword,
-                $oldPassword
-            );
-
-            // Redirect with success message
-            header('Location: screen?screen=profile&message=Password berhasil diubah');
-            exit();
-
-        } catch (Exception $e) {
-            // Redirect with error message
-            header('Location: screen?screen=profile&error=' . urlencode($e->getMessage()));
-            exit();
         }
     }
-}
 
-    
+
 
 
 
