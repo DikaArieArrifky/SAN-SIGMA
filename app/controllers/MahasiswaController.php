@@ -3,12 +3,14 @@
 // require_once '../app/models/Admin.php';
 require_once 'app/models/Mahasiswa.php';
 require_once 'app/core/Database.php';
+require_once 'app/models/Dosen.php';
 
 
 
 class MahasiswaController extends Controller
 {
     private $mahasiswa;
+    private $dosen;
     private $db;
 
 
@@ -16,6 +18,7 @@ class MahasiswaController extends Controller
     {
         $db = Database::getInstance(getDatabaseConfig(), [$this, 'error']);
         $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+        $this->dosen = new Dosen(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index($screen = "dashboard")
@@ -63,16 +66,16 @@ class MahasiswaController extends Controller
 
                 "tingkat" => $this->mahasiswa->getTingkatanLomba(),
                 "peringkat" => $this->mahasiswa->getPeringkatLomba(),
-                
+                "dosenName" => $this->dosen->getAllDosen(),
+
 
 
             ];
 
             $this->view('mahasiswa/index', $data);
-
         } catch (Exception $e) {
             // Handle error appropriately
-           //alert js exception
+            //alert js exception
             echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
             echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
             exit();
@@ -81,18 +84,18 @@ class MahasiswaController extends Controller
 
     // show riwayat mahasiswa
     public function getVerifikasiDetail()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-        try {
-            $verifikasiId = $_POST['id'];
-            $detail = $this->mahasiswa->getVerifikasiAndPenghargaanByIdVerifikasi($verifikasiId);
-            echo json_encode($detail);
-        } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode(['error' => $e->getMessage()]);
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+            try {
+                $verifikasiId = $_POST['id'];
+                $detail = $this->mahasiswa->getVerifikasiAndPenghargaanByIdVerifikasi($verifikasiId);
+                echo json_encode($detail);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
+            }
         }
     }
-}
 
     public function uploadPhoto()
     {
@@ -133,7 +136,7 @@ class MahasiswaController extends Controller
                 if ($oldPhoto && file_exists($uploadDir . $oldPhoto)) {
                     unlink($uploadDir . $oldPhoto);
                 }
-                
+
 
                 // Move uploaded file
                 if (!move_uploaded_file($file['tmp_name'], $uploadFile)) {
@@ -216,22 +219,21 @@ class MahasiswaController extends Controller
             try {
                 header('Content-Type: application/json');
                 ob_clean();
-                
+
                 $tingkatId = filter_input(INPUT_POST, 'tingkat_id', FILTER_SANITIZE_NUMBER_INT);
                 $peringkatId = filter_input(INPUT_POST, 'peringkat_id', FILTER_SANITIZE_NUMBER_INT);
-                
+
                 if (!$tingkatId || !$peringkatId) {
                     throw new Exception('Missing required parameters');
                 }
-                
+
                 // Use $this->mahasiswa instead of direct DB query
                 $score = $this->mahasiswa->calculateScore($tingkatId, $peringkatId);
-                
+
                 die(json_encode([
                     'success' => true,
                     'score' => floatval($score)
                 ]));
-                
             } catch (Exception $e) {
                 http_response_code(500);
                 die(json_encode([
@@ -244,63 +246,114 @@ class MahasiswaController extends Controller
 
 
 
-    // public function count prestasis mahasiswa by nim
+    public function uploadPrestasi()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                // Get mahasiswa data
+                $mahasiswaData = $this->mahasiswa->getMahasiswaByUserId($_SESSION['user_id']);
+                if (!$mahasiswaData) {
+                    throw new Exception("Mahasiswa data not found");
+                }
 
+                // Validate files
+                $files = ['sertifikat', 'poster', 'foto'];
+                $uploadedFiles = [];
 
-    // public function getDataPengumpulan()
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //         $mahasiswaList = $this->mahasiswa->getAllMahasiswaInformation();
+                foreach ($files as $fileType) {
+                    if (!isset($_FILES[$fileType])) {
+                        throw new Exception("File $fileType is required");
+                    }
 
-    //         $tingkatDokumen = $this->admin->adminApa;
-    //         if ($tingkatDokumen === TipeAdmin::Super) {
-    //             $tingkatDokumen = TingkatDokumen::from($_POST['super-tingkat']);
-    //         } else {
-    //             $tingkatDokumen = TingkatDokumen::from(ucwords($this->admin->adminApa->value));
-    //         }
-    //         $dokumenList = $this->dokumen->getDokumenList($tingkatDokumen);
-    //         $everToSubmit = [];
-    //         foreach ($this->dokumen->getDokumenListAllWithUpload($tingkatDokumen) as $dokumen) {
-    //             $nim = $dokumen['nim'];
-    //             unset($dokumen['nim']);
-    //             $everToSubmit[$nim][] = $dokumen;
-    //         }
+                    $file = $_FILES[$fileType];
 
-    //         $data = [];
-    //         foreach ($mahasiswaList as $mahasiswa) {
-    //             $temp = [
-    //                 'data_mahasiswa' => $mahasiswa,
-    //             ];
-    //             foreach ($dokumenList as $dokumen) {
-    //                 $temp['data_detail'][] = [
-    //                     'dokumen' => $dokumen['dokumen'],
-    //                     'id' => $dokumen['id'],
-    //                     'status' => ''
-    //                 ];
-    //             }
-    //             if (isset($everToSubmit[$mahasiswa['nim']])) {
-    //                 $dokumenMahasiswaNim = $everToSubmit[$mahasiswa['nim']];
-    //                 foreach ($dokumenMahasiswaNim as $key => $value) {
-    //                     $temp['data_detail'][$key] = $value;
-    //                 }
-    //             }
-    //             $data[] = $temp;
-    //         }
-    //     }
+                    // Validate file size (max 10MB)
+                    if ($file['size'] > 10485760) {
+                        throw new Exception("$fileType file is too large. Maximum size is 10MB");
+                    }
 
-    //     echo json_encode($data);
-    // }
+                    // Validate file type
+                    $allowedTypes = [
+                        'sertifikat' => ['application/pdf', 'image/jpeg', 'image/png'],
+                        'poster' => ['application/pdf', 'image/jpeg', 'image/png'],
+                        'foto' => ['image/jpeg', 'image/png']
+                    ];
 
-    // public function updateDataPengumpulan()
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //         $this->dokumen->updateUploadDokumen(
-    //             $_POST['id_dokumen'],
-    //             $_POST['nim'],
-    //             $this->admin->getPeopleId(),
-    //             $_POST['acc'] === 'true' ? StatusDokumen::Diverifikasi : StatusDokumen::Ditolak,
-    //             isset($_POST['komentar']) ? $_POST['komentar'] : ''
-    //         );
-    //     }
-    // }
+                    if (!in_array($file['type'], $allowedTypes[$fileType])) {
+                        throw new Exception("Invalid file type for $fileType");
+                    }
+
+                    // Create upload directories if they don't exist
+                    $uploadDir = dirname(__DIR__, 2) . '/assets/img/file-prestasi/';
+                    if (!file_exists($uploadDir)) {
+                        mkdir($uploadDir, 0777, true);
+                    }
+
+                    // Generate unique filename
+                    $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+                    $filename = uniqid() . '_' . time() . '.' . $extension;
+                    $uploadPath = $uploadDir . $filename;
+
+                    // Move file
+                    if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                        throw new Exception("Failed to upload $fileType file");
+                    }
+
+                    $uploadedFiles[$fileType] = $filename;
+                }
+
+                // Insert prestasi data
+                $prestasiData = [
+                    'mahasiswa_nim' => $mahasiswaData['nim'],
+                    'judul' => $_POST['judul'],
+                    'tempat' => $_POST['tempat'],
+                    'url' => $_POST['url'],
+                    'tanggal_mulai' => $_POST['tanggal_mulai'],
+                    'tanggal_akhir' => $_POST['tanggal_akhir'],
+                    'jumlah_instansi' => $_POST['jumlah_instansi'],
+                    'jumlah_peserta' => $_POST['jumlah_peserta'],
+                    'tingkat_id' => $_POST['tingkat'],
+                    'peringkat_id' => $_POST['peringkat'],
+                    'score' => $_POST['score'],
+                    'file_sertifikat' => $uploadedFiles['sertifikat'],
+                    'file_poster' => $uploadedFiles['poster'],
+                    'file_photo_kegiatan' => $uploadedFiles['foto']
+                ];
+
+                // Insert into database
+                $prestasiId = $this->mahasiswa->insertPrestasi($prestasiData);
+
+                // Insert verifikasi data
+                $dosenNip = explode(' ', $_POST['dosenPembimbing']);
+                $dosenNip = end($dosenNip);
+
+                $verifikasiData = [
+                    'mahasiswa_nim' => $mahasiswaData['nim'],
+                    'dosen_nip' => $dosenNip,
+                    'penghargaan_id' => $prestasiId,
+                    'verif_admin' => 'DiProses',
+                    'verif_pembimbing' => 'DiProses'
+                ];
+
+                $this->mahasiswa->insertVerifikasi($verifikasiData);
+
+                // Redirect with success message
+                echo '<script>alert("Prestasi berhasil diinputkan");</script>';
+                echo '<script>setTimeout(function(){ window.location.href = "screen?screen=riwayat"; }, 10);</script>';
+                exit();
+            } catch (Exception $e) {
+                // Delete uploaded files if any error occurs
+                foreach ($uploadedFiles as $file) {
+                    if (file_exists($uploadDir . $file)) {
+                        unlink($uploadDir . $file);
+                    }
+                }
+
+                // Redirect with error message and timeout
+                echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+                echo '<script>setTimeout(function(){ window.location.href = "screen?screen=inputPrestasi"; }, 3000);</script>';
+                exit();
+            }
+        }
+    }
 }

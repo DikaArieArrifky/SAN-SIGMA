@@ -53,7 +53,7 @@
                 <h5>
                     <i class="bi bi-clipboard2-plus"></i> Data Kompetisi
                 </h5>
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" enctype="multipart/form-data" action="uploadPrestasi">
                     <div class="mb-3">
                         <strong><label class="form-label">Judul Kompetisi</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
                         <input class="form-control" type="text" name="judul" pattern="[A-Za-z0-9\s]+" maxlength="255" required />
@@ -71,7 +71,7 @@
                     <div class="mb-3">
                         <strong><label class="form-label">Peringkat</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
                         <select class="form-control" name="peringkat" required>
-                            <option value="">Pilih Tingkat Kompetisi</option>
+                            <option value="">Pilih Peringkat Yang Diperoleh</option>
                             <?php foreach ($data['peringkat'] as $peringkat): ?>
                                 <option value="<?= $peringkat['id'] ?>"><?= htmlspecialchars($peringkat['nama']) ?></option>
                             <?php endforeach; ?>
@@ -106,42 +106,45 @@
                         <input class="form-control" type="number" name="jumlah_peserta" min="1" required />
                     </div>
                     <div class="mb-3">
-                        <strong><label class="form-label">File Sertifikat</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
+                        <strong><label class="form-label">File Sertifikat max 10mb</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
                         <input class="form-control" type="file" name="sertifikat" accept=".pdf,.jpg,.jpeg,.png" required />
                     </div>
                     <div class="mb-3">
-                        <strong><label class="form-label">File Poster</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
+                        <strong><label class="form-label">File Poster max 10mb</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
                         <input class="form-control" type="file" name="poster" accept=".pdf,.jpg,.jpeg,.png" required />
                     </div>
                     <div class="mb-3">
-                        <strong><label class="form-label">File Foto Kegiatan</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
+                        <strong><label class="form-label">File Foto Kegiatan max 10mb</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
                         <input class="form-control" type="file" name="foto" accept=".jpg,.jpeg,.png" required />
                     </div>
 
-            </div>
-            <div class="form-section">
-                <h5>
-                    <i class="bi bi-clipboard2-plus"></i> Data Pembimbing
-                </h5>
-                <div class="mb-3">
-                    <strong><label class="form-label">Pembimbing Lomba</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
+                    <div class="form-section">
+                        <h5>
+                            <i class="bi bi-clipboard2-plus"></i> Data Pembimbing
+                        </h5>
+                        <div class="mb-3">
+                            <strong><label class="form-label">Pembimbing Lomba</label></strong><span class="text-danger" style="font-size: 1.2em; font-weight: bold;">*</span>
 
-                    <select class="form-control" name="pembimbing" required>
-                        <option value="">Pilih Pembimbing *</option>
-                    </select>
-                </div>
+                            <select class="form-control" name="dosenPembimbing" required>
+                                <option value="">Pilih Dosen Pembimbing</option>
+                                <?php foreach ($data['dosenName'] as $dosenName): ?>
+                                    <option value="<?= htmlspecialchars($dosenName['name'] . ' ' . $dosenName['nip']) ?>"><?= htmlspecialchars($dosenName['name']) . "  = NIP : " . htmlspecialchars($dosenName['nip']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-danger me-2" type="reset">
+                            Reset
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Kirim
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-danger me-2">
-                    Reset
-                </button>
-                <button class="btn btn-primary">
-                    Kirim
-                </button>
-            </div>
+
         </div>
-        </form>
-    </div>
 </body>
 
 </html>
