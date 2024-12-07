@@ -24,6 +24,7 @@ abstract class Controller
     public function logout()
     {
         Session::destroy();
+        
         header("Location: " . BASE_URL);
         exit();
     }

@@ -16,7 +16,7 @@ class MahasiswaController extends Controller
 
     public function __construct()
     {
-        $db = Database::getInstance(getDatabaseConfig(), [$this, 'error']);
+        
         $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->dosen = new Dosen(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }

@@ -2,18 +2,21 @@
 
 require_once 'app/models/Login.php';
 require_once 'app/models/Mahasiswa.php';
+require_once 'app/models/Admin.php';
 require_once 'app/models/Landing.php';
 
 class LoginController extends Controller
 {
     private $login;
     private $mahasiswa;
+    private $admin;
     private $landing;
 
     public function __construct()
     {
         $this->login = new Login(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+        $this->admin = new Admin(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->landing = new Landing(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
@@ -32,7 +35,7 @@ class LoginController extends Controller
                 'top10NewVerifikasi' => $top10NewVerifikasi  // Fixed array key
             ]);
         } catch (Exception $e) {
-            $this->error(500, $e->getMessage());
+          
         }
     }
 
@@ -69,6 +72,9 @@ class LoginController extends Controller
         }
         switch ($role['role']) {
             case 'admin':
+                $admin = new Admin(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+                $user_id = $this->admin->getUserId(Session::get('username'));
+                Session::set('user_id', $user_id);
                 require_once 'app/controllers/AdminController.php';
                 header("Location: admin/index");
                 break;
