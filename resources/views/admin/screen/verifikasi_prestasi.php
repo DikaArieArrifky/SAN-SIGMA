@@ -224,12 +224,24 @@
             <script>
 
                 //button sort
+                function resetSortButtons(exceptButton) {
+                    const buttons = document.querySelectorAll('.btn-info');
+                    buttons.forEach(button => {
+                        if (button !== exceptButton) {
+                            button.removeAttribute('data-sort');
+                            const icon = button.querySelector('i');
+                            icon.className = 'fas fa-sort';
+                        }
+                    });
+                }
+
                 function sortByName() {
                     const table = document.querySelector('table');
                     const rows = Array.from(table.querySelectorAll('tbody tr'));
                     const button = document.querySelector('button[onclick="sortByName()"]');
                     const isAscending = button.getAttribute('data-sort') !== 'asc';
 
+                    resetSortButtons(button);
                     button.setAttribute('data-sort', isAscending ? 'asc' : 'desc');
                     updateSortIcon(button, isAscending);
 
@@ -252,6 +264,7 @@
                     const button = document.querySelector('button[onclick="sortByTingkatan()"]');
                     const isAscending = button.getAttribute('data-sort') !== 'asc';
 
+                    resetSortButtons(button);
                     button.setAttribute('data-sort', isAscending ? 'asc' : 'desc');
                     updateSortIcon(button, isAscending);
 
@@ -274,6 +287,7 @@
                     const button = document.querySelector('button[onclick="sortByJudul()"]');
                     const isAscending = button.getAttribute('data-sort') !== 'asc';
 
+                    resetSortButtons(button);
                     button.setAttribute('data-sort', isAscending ? 'asc' : 'desc');
                     updateSortIcon(button, isAscending);
 
