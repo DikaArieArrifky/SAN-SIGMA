@@ -1,374 +1,3 @@
-
-<style>
-    body {
-        font-family: 'Roboto', sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f0f4f7;
-    }
-
-    .flex-1 .px-2 .py-4{
-        width: 200px !important;
-
-    }
-    .sidebar-container {
-        width: 200px;
-        position: fixed;
-        height: 100vh;
-        background-color: #1b1b1b;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        padding: 20px 0;
-    }
-
-    .sidebar img {
-        width: 150px;
-        margin: 20px auto;
-    }
-
-    .sidebar a {
-        text-decoration: none;
-        color: white;
-        padding: 15px 20px;
-        display: flex;
-        align-items: center;
-    }
-
-    .sidebar a:hover,
-    .sidebar a.active {
-        background-color: #162447;
-    }
-
-    .sidebar a i {
-        margin-right: 10px;
-    }
-
-    .sidebar .logout {
-        margin-top: auto;
-        padding: 15px 20px;
-        background-color: #e94560;
-        text-align: center;
-    }
-
-    .content {
-        margin-left: 250px;
-        padding: 20px;
-    }
-
-    .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #f0f4f7;
-        padding: 10px 20px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .header .breadcrumb {
-        font-size: 14px;
-        color: #555;
-    }
-
-    .header .user-info {
-        display: flex;
-        align-items: center;
-    }
-
-    .header .user-info img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        margin-right: 10px;
-    }
-
-    .header .user-info span {
-        font-size: 14px;
-        color: #555;
-    }
-
-    .header .user-info small {
-        display: block;
-        font-size: 12px;
-        color: #999;
-    }
-
-    .table-container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .table-container .table-header {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        margin-bottom: 20px;
-    }
-
-    .table-container .table-header button {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        color: white;
-        cursor: pointer;
-        margin-right: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Add shadow */
-        transition: background-color 0.3s, box-shadow 0.3s;
-        /* Smooth transition */
-    }
-
-    .table-container .table-header .btn-verified {
-        background-color: #28a745;
-    }
-
-    .table-container .table-header .btn-rejected {
-        background-color: #dc3545;
-    }
-
-    .table-container .table-header .btn-verified:hover {
-        background-color: #218838;
-        /* Darker green on hover */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        /* Bigger shadow on hover */
-    }
-
-    .table-container .table-header .btn-rejected:hover {
-        background-color: #c82333;
-        /* Darker red on hover */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        /* Bigger shadow on hover */
-    }
-
-    .table-container table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .table-container table th,
-    .table-container table td {
-        padding: 15px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .table-container table th {
-        background-color: #f0f4f7;
-    }
-
-    .table-container table td .btn-view {
-        padding: 7px 15px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        /* Add shadow */
-        transition: background-color 0.3s, box-shadow 0.3s;
-        /* Smooth transition */
-    }
-
-    .table-container table td .btn-view:hover {
-        background-color: #0056b3;
-        /* Darker blue on hover */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-        /* Bigger shadow on hover */
-    }
-
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
-    }
-
-    .pagination button {
-        padding: 10px 15px;
-        border: none;
-        background-color: #f0f4f7;
-        cursor: pointer;
-        margin: 0 5px;
-    }
-
-    .pagination button.active {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .pagination button:hover {
-        background-color: #ddd;
-    }
-
-    @media (max-width: 768px) {
-        .sidebar {
-            width: 100%;
-            height: auto;
-            position: relative;
-        }
-
-        .sidebar img {
-            width: 100px;
-        }
-
-        .content {
-            margin-left: 0;
-        }
-
-        .header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .header .user-info {
-            margin-top: 10px;
-        }
-    }
-
-    .table-container table td i {
-        margin-left: 50px;
-    }
-
-    .search-container {
-        display: flex;
-        justify-content: flex-end;
-        position: relative;
-
-    }
-
-    .search-container input {
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        margin-right: 10px;
-    }
-
-    .search-container button {
-        padding: 10px;
-        border: none;
-        background-color: #007bff;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .search-container button i {
-        margin-right: 0;
-    }
-
-    .main-content {
-        display: flex;
-        margin-top: 20px;
-    }
-
-    .main-content .card {
-        background-color: #b4f4fc;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-right: 20px;
-        flex: 0.6;
-        border: 10px;
-        border-color: #333;
-    }
-
-    .main-content .card img {
-        width: 100%;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-
-    .main-content .card h3 {
-        margin: 0;
-        font-size: 24px;
-        color: #000000;
-    }
-
-    .main-content .card p {
-        margin: 10px 0;
-        font-size: 16px;
-        color: #333;
-    }
-
-    .main-content .card a {
-        color: #007bff;
-        text-decoration: none;
-    }
-
-    .main-content .card a:hover {
-        text-decoration: underline;
-    }
-
-    .main-content .details {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        flex: 1;
-        position: relative;
-    }
-
-    .main-content .details h3 {
-        margin: 0;
-        font-size: 24px;
-        color: #5cd5da;
-        margin-bottom: 20px;
-    }
-
-    .main-content .details p {
-        margin: 10px 0;
-        font-size: 16px;
-        color: #333;
-    }
-
-    .main-content .details .back-button i {
-        margin-right: 5px;
-        /* Geser ikon sedikit ke kiri */
-        position: relative;
-        left: -2px;
-        /* Menggeser ikon ke kiri */
-    }
-
-    .main-content .details a {
-        color: #007bff;
-        text-decoration: none;
-    }
-
-    .main-content .details a:hover {
-        text-decoration: underline;
-    }
-
-    .main-content .details .back-button {
-        display: inline-block;
-        padding: 8px 16px;
-        background-color: #009db1;
-        color: #ffffff;
-        text-decoration: none;
-        border-radius: 8px;
-        font-size: 15px;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-    }
-
-    .main-content .details .back-button:hover {
-        background-color: #027d8d;
-    }
-
-    .main-content .card h3,
-    title {
-        text-align: center;
-    }
-
-    /* make tittle Politeknik Negeri Malang to center */
-    .main-content .card h4 {
-        text-align: center;
-    }
-</style>
-</head>
-
 <body>
 
     <div class="table-container">
@@ -829,4 +458,375 @@
         </div>
 </div>
 </body>
-</div>
+
+
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f0f4f7;
+    }
+
+    .flex-1 .px-2 .py-4 {
+        width: 200px !important;
+
+    }
+
+    .sidebar-container {
+        width: 200px;
+        position: fixed;
+        height: 100vh;
+        background-color: #1b1b1b;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 0;
+    }
+
+    .sidebar img {
+        width: 150px;
+        margin: 20px auto;
+    }
+
+    .sidebar a {
+        text-decoration: none;
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        align-items: center;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+        background-color: #162447;
+    }
+
+    .sidebar a i {
+        margin-right: 10px;
+    }
+
+    .sidebar .logout {
+        margin-top: auto;
+        padding: 15px 20px;
+        background-color: #e94560;
+        text-align: center;
+    }
+
+    .content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #f0f4f7;
+        padding: 10px 20px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .header .breadcrumb {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .header .user-info {
+        display: flex;
+        align-items: center;
+    }
+
+    .header .user-info img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+
+    .header .user-info span {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .header .user-info small {
+        display: block;
+        font-size: 12px;
+        color: #999;
+    }
+
+    .table-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container .table-header {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .table-container .table-header button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        cursor: pointer;
+        margin-right: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Add shadow */
+        transition: background-color 0.3s, box-shadow 0.3s;
+        /* Smooth transition */
+    }
+
+    .table-container .table-header .btn-verified {
+        background-color: #28a745;
+    }
+
+    .table-container .table-header .btn-rejected {
+        background-color: #dc3545;
+    }
+
+    .table-container .table-header .btn-verified:hover {
+        background-color: #218838;
+        /* Darker green on hover */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        /* Bigger shadow on hover */
+    }
+
+    .table-container .table-header .btn-rejected:hover {
+        background-color: #c82333;
+        /* Darker red on hover */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        /* Bigger shadow on hover */
+    }
+
+    .table-container table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table-container table th,
+    .table-container table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table-container table th {
+        background-color: #f0f4f7;
+    }
+
+    .table-container table td .btn-view {
+        padding: 7px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Add shadow */
+        transition: background-color 0.3s, box-shadow 0.3s;
+        /* Smooth transition */
+    }
+
+    .table-container table td .btn-view:hover {
+        background-color: #0056b3;
+        /* Darker blue on hover */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        /* Bigger shadow on hover */
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .pagination button {
+        padding: 10px 15px;
+        border: none;
+        background-color: #f0f4f7;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+
+    .pagination button.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .pagination button:hover {
+        background-color: #ddd;
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        .sidebar img {
+            width: 100px;
+        }
+
+        .content {
+            margin-left: 0;
+        }
+
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .header .user-info {
+            margin-top: 10px;
+        }
+    }
+
+    .table-container table td i {
+        margin-left: 50px;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: flex-end;
+        position: relative;
+
+    }
+
+    .search-container input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .search-container button {
+        padding: 10px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .search-container button i {
+        margin-right: 0;
+    }
+
+    .main-content {
+        display: flex;
+        margin-top: 20px;
+    }
+
+    .main-content .card {
+        background-color: #b4f4fc;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-right: 20px;
+        flex: 0.6;
+        border: 10px;
+        border-color: #333;
+    }
+
+    .main-content .card img {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .main-content .card h3 {
+        margin: 0;
+        font-size: 24px;
+        color: #000000;
+    }
+
+    .main-content .card p {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .main-content .card a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .main-content .card a:hover {
+        text-decoration: underline;
+    }
+
+    .main-content .details {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        position: relative;
+    }
+
+    .main-content .details h3 {
+        margin: 0;
+        font-size: 24px;
+        color: #5cd5da;
+        margin-bottom: 20px;
+    }
+
+    .main-content .details p {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #333;
+    }
+
+    .main-content .details .back-button i {
+        margin-right: 5px;
+        /* Geser ikon sedikit ke kiri */
+        position: relative;
+        left: -2px;
+        /* Menggeser ikon ke kiri */
+    }
+
+    .main-content .details a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .main-content .details a:hover {
+        text-decoration: underline;
+    }
+
+    .main-content .details .back-button {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #009db1;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 15px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .main-content .details .back-button:hover {
+        background-color: #027d8d;
+    }
+
+    .main-content .card h3,
+    title {
+        text-align: center;
+    }
+
+    /* make tittle Politeknik Negeri Malang to center */
+    .main-content .card h4 {
+        text-align: center;
+    }
+</style>

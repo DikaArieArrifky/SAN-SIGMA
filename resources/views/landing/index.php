@@ -174,7 +174,7 @@
                             SAN SIGMA atau Sistem Pencatatan Prestasi Digital Mahasiswa ini dirancang untuk mencatat dan mengelola informasi prestasi mahasiswa di Polinema
                             secara terpusat dan terstruktur.
                         </p>
-                        <h4> Dibuat Oleh Kelompok</h4>
+                        <h4> Dibuat Oleh Kelompok 2</h4>
                         <ul style="list-style: none; padding: 0;">
                             <li style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <i class="bi bi-check2-circle" style="margin-right: 10px;"></i>
@@ -190,11 +190,6 @@
                                 <i class="bi bi-check2-circle" style="margin-right: 10px;"></i>
                                 <span style="width: 200px;">NOKLENT FARDIAN ERIX</span>
                                 <span>: 2341720082</span>
-                            </li>
-                            <li style="display: flex; align-items: center; margin-bottom: 5px;">
-                                <i class="bi bi-check2-circle" style="margin-right: 10px;"></i>
-                                <span style="width: 200px;">SATRIO AHMAD R</span>
-                                <span>: 2341720163</span>
                             </li>
                             <li style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <i class="bi bi-check2-circle" style="margin-right: 10px;"></i>
