@@ -419,20 +419,20 @@
                         <td><?= htmlspecialchars($verifikasi['tempat'] ?? '-') ?></td>
                         <td>
                             <?php if ($verifikasi['verif_pembimbing'] === 'Terverifikasi'): ?>
-                                <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                                <i class="fas fa-check-circle" style="color: #28a745; font-size:2em"></i>
                             <?php elseif ($verifikasi['verif_pembimbing'] === 'DiTolak'): ?>
-                                <i class="fas fa-times-circle" style="color: #dc3545;"></i>
+                                <i class="fas fa-times-circle" style="color: #dc3545; font-size:2em"></i>
                             <?php else: ?>
-                                <i class="fas fa-clock" style="color: #ffc107;"></i>
+                                <i class="fas fa-clock" style="color: #ffc107; font-size:2em"></i>
                             <?php endif; ?>
                         </td>
                         <td>
                             <?php if ($verifikasi['verif_admin'] === 'Terverifikasi'): ?>
-                                <i class="fas fa-check-circle" style="color: #28a745;"></i>
+                                <i class="fas fa-check-circle" style="color: #28a745;  font-size:2em;"></i>
                             <?php elseif ($verifikasi['verif_admin'] === 'DiTolak'): ?>
-                                <i class="fas fa-times-circle" style="color: #dc3545;"></i>
+                                <i class="fas fa-times-circle" style="color: #dc3545;  font-size:2em;"></i>
                             <?php else: ?>
-                                <i class="fas fa-clock" style="color: #ffc107;"></i>
+                                <i class="fas fa-clock" style="color: #ffc107 ; font-size:2em"></i>
                             <?php endif; ?>
                         </td>
                         <td>
@@ -469,73 +469,7 @@
     </div>
     </div>
 </body>
-<script>
-    $(document).ready(function() {
-        // Existing search functionality
-        $('#search-button').click(function() {
-            var searchValue = $('#search-input').val().toLowerCase();
-            filterTable(searchValue, null);
-        });
 
-        $('#search-input').on('keyup', function() {
-            var searchValue = $(this).val().toLowerCase();
-            filterTable(searchValue, null);
-        });
-
-        // Filter buttons functionality
-        $('#filter-verified').click(function() {
-            $(this).toggleClass('active');
-            if ($(this).hasClass('active')) {
-                $('tbody tr').hide();
-                $('tbody tr').filter(function() {
-                    return $(this).find('td:eq(3) i').hasClass('fa-check-circle') &&
-                        $(this).find('td:eq(4) i').hasClass('fa-check-circle');
-                }).show();
-            } else {
-                $('tbody tr').show();
-            }
-        });
-
-        $('.btn-rejected').click(function() {
-            $(this).toggleClass('active');
-            if ($(this).hasClass('active')) {
-                $('tbody tr').hide();
-                $('tbody tr').filter(function() {
-                    return $(this).find('td:eq(3) i').hasClass('fa-times-circle') ||
-                        $(this).find('td:eq(4) i').hasClass('fa-times-circle');
-                }).show();
-            } else {
-                $('tbody tr').show();
-            }
-        });
-
-        $('.btn-warning').click(function() {
-            $(this).toggleClass('active');
-            if ($(this).hasClass('active')) {
-                $('tbody tr').hide();
-                $('tbody tr').filter(function() {
-                    return $(this).find('td:eq(3) i').hasClass('fa-clock') ||
-                        $(this).find('td:eq(4) i').hasClass('fa-clock');
-                }).show();
-            } else {
-                $('tbody tr').show();
-            }
-        });
-
-        // Helper function to filter table
-        function filterTable(searchValue, status) {
-            $('tbody tr').filter(function() {
-                let textMatch = $(this).text().toLowerCase().indexOf(searchValue) > -1;
-                if (status) {
-                    let statusMatch = $(this).find('td:eq(3) i').hasClass(status) &&
-                        $(this).find('td:eq(4) i').hasClass(status);
-                    return textMatch && statusMatch;
-                }
-                return textMatch;
-            }).show();
-        }
-    });
-</script>
 
 <div id="modal-prestasi" class="modal fade" role="dialog">
 
@@ -621,6 +555,69 @@
 
 
                     <script>
+                        $(document).ready(function() {
+                            // Existing search functionality
+                            $('#search-button').click(function() {
+                                var searchValue = $('#search-input').val().toLowerCase();
+                                filterTable(searchValue, null);
+                            });
+
+                            $('#search-input').on('keyup', function() {
+                                var searchValue = $(this).val().toLowerCase();
+                                filterTable(searchValue, null);
+                            });
+
+                            // Filter buttons functionality
+                            $('#filter-verified').click(function() {
+                                $(this).toggleClass('active');
+                                if ($(this).hasClass('active')) {
+                                    $('tbody tr').hide();
+                                    $('tbody tr').filter(function() {
+                                        return $(this).find('td:eq(3) i').hasClass('fa-check-circle') &&
+                                            $(this).find('td:eq(4) i').hasClass('fa-check-circle');
+                                    }).show();
+                                } else {
+                                    $('tbody tr').show();
+                                }
+                            });
+
+                            $('.btn-rejected').click(function() {
+                                $(this).toggleClass('active');
+                                if ($(this).hasClass('active')) {
+                                    $('tbody tr').hide();
+                                    $('tbody tr').filter(function() {
+                                        return $(this).find('td:eq(3) i').hasClass('fa-times-circle') ||
+                                            $(this).find('td:eq(4) i').hasClass('fa-times-circle');
+                                    }).show();
+                                } else {
+                                    $('tbody tr').show();
+                                }
+                            });
+
+
+                            $('.btn-warning').click(function() {
+                                $(this).toggleClass('active');
+                                if ($(this).hasClass('active')) {
+                                    $('tbody tr').hide();
+                                    $('tbody tr').filter(function() {
+                                        return $(this).find('td:eq(3) i').hasClass('fa-clock') ||
+                                            $(this).find('td:eq(4) i').hasClass('fa-clock');
+                                    }).show();
+                                } else {
+                                    $('tbody tr').show();
+                                }
+                            });
+
+                            // Helper function to filter table
+                            function filterTable(searchValue, status) {
+                                $('tbody tr').hide();
+                                $('tbody tr').filter(function() {
+                                    var text = $(this).text().toLowerCase();
+                                    return text.indexOf(searchValue) > -1;
+                                }).show();
+                            }
+                        });
+
                         function viewDetail(verifikasiId) {
                             $.ajax({
                                 url: 'getVerifikasiDetail',
@@ -800,7 +797,7 @@
                             }
                         }
                     </script>
-
+                    
                     <a class="back-button" data-dismiss="modal" type="button"><i class="fas fa-arrow-left"></i> Kembali</a>
                 </div>
 
@@ -816,6 +813,169 @@
                     .doc-link:hover {
                         background-color: #007bff;
                         color: white;
+                    }
+
+                    /* Enhanced Modal and Card Styles */
+                    .main-content .card {
+                        background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+                        padding: 25px;
+                        border-radius: 15px;
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+                        margin-right: 20px;
+                        flex: 0.6;
+                        transform: translateY(0);
+                        transition: all 0.3s ease;
+                    }
+
+                    .main-content .card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+                    }
+
+                    /* Enhanced Table Styles */
+                    .table-container {
+                        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+                        padding: 25px;
+                        border-radius: 15px;
+                        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                    }
+
+                    .table-container table tr {
+                        transition: all 0.3s ease;
+                    }
+
+                    .table-container table tr:hover {
+                        background-color: rgba(0, 123, 255, 0.05);
+                        transform: scale(1.01);
+                    }
+
+                    /* Enhanced Button Styles */
+                    .btn-view {
+                        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+                        padding: 8px 16px;
+                        border-radius: 8px;
+                        color: white;
+                        font-weight: 500;
+                        transition: all 0.3s ease;
+                    }
+
+                    .btn-view:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+                    }
+
+                    /* Filter Buttons Animation */
+                    .table-header button {
+                        position: relative;
+                        overflow: hidden;
+                        transition: all 0.3s ease;
+                    }
+
+                    .table-header button::after {
+                        content: '';
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        width: 0;
+                        height: 0;
+                        background: rgba(255, 255, 255, 0.2);
+                        border-radius: 50%;
+                        transform: translate(-50%, -50%);
+                        transition: width 0.6s ease, height 0.6s ease;
+                    }
+
+                    .table-header button:hover::after {
+                        width: 200%;
+                        height: 200%;
+                    }
+
+                    /* Search Bar Enhancement */
+                    .search-container input {
+                        border: 2px solid #e9ecef;
+                        border-radius: 8px;
+                        padding: 12px 20px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .search-container input:focus {
+                        border-color: #007bff;
+                        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+                        outline: none;
+                    }
+
+                    /* Loading Animation */
+                    .loading {
+                        position: relative;
+                    }
+
+                    .loading::after {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                        animation: loading 1.5s infinite;
+                    }
+
+                    @keyframes loading {
+                        0% {
+                            transform: translateX(-100%);
+                        }
+
+                        100% {
+                            transform: translateX(100%);
+                        }
+                    }
+
+                    /* Modal Enhancements */
+                    .modal .form-control {
+                        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                        border: none;
+                        border-radius: 8px;
+                        padding: 12px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .modal .form-control:focus {
+                        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+                    }
+
+                    /* Document Preview Button */
+                    .doc-link {
+                        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+                        border: 2px solid #007bff;
+                        padding: 8px 16px;
+                        border-radius: 8px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .doc-link:hover {
+                        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+                        transform: translateY(-2px);
+                    }
+
+                    /* Status Icons Animation */
+                    .fa-check-circle,
+                    .fa-times-circle,
+                    .fa-clock {
+                        transition: all 0.3s ease;
+                    }
+
+                    .fa-check-circle:hover {
+                        transform: scale(1.2);
+                        color: #1e7e34 !important;
+                    }
+
+                    .fa-times-circle:hover {
+                        transform: scale(1.2);
+                        color: #bd2130 !important;
+                    }
+
+                    .fa-clock:hover {
+                        transform: scale(1.2);
+                        color: #d39e00 !important;
                     }
                 </style>
             </div>

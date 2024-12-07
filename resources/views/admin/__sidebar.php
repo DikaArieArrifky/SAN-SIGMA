@@ -25,6 +25,9 @@
                 <i class="fas fa-history"></i>
                 <span class="ml-3">Riwayat</span>
             </button>
+            <hr>
+            <span class="ml-3 text-2xl font-semibold mt-3 mb-3">Management Data</span>
+            
             <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_mahasiswa" name="screen">
                 <i class="bi bi-mortarboard-fill"></i>
                 <span class="ml-3">Kelola Mahasiswa</span>
@@ -49,11 +52,12 @@
                 <i class="bi bi-award-fill"></i>
                 <span class="ml-3">Kelola Peringkat</span>
             </button>
+            <hr>
             <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="profile" name="screen">
                 <i class="fas fa-user"></i>
                 <span class="ml-3">Profile</span>
             </button>
-
+            <hr>
             <button type="button" class="sidebar-menu-btn w-full flex items-center px-4 py-2 mt-2 text-red-500 rounded-lg" id="tombol-keluar">
                 <i class="fas fa-sign-out-alt"></i>
                 <span class="ml-3">Keluar</span>
@@ -91,6 +95,7 @@
             <button type="submit" value="riwayat" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="fas fa-history"></i>
             </button>
+            <hr>
             <button type="submit" value="kelola_mahasiswa" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-mortarboard-fill"></i>
             </button>
@@ -109,12 +114,13 @@
             <button type="submit" value="kelola_peringkat" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-award-fill"></i>
             </button>
+            <hr>
             <button type="submit" value="profile" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="fas fa-user"></i>
             </button>
         </nav>
     </form>
-
+    <hr>
     <div class="px-4 py-2 border-t border-gray-800 flex justify-center">
         <button type="button" class="flex items-center w-full justify-center text-red-500 hover:text-red-800" id="tombol-keluar2">
             <i class="fas fa-sign-out-alt"></i>

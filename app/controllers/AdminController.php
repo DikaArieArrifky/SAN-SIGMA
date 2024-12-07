@@ -42,7 +42,8 @@ class AdminController extends Controller
                     "name" => $dataAdmin['name'],
                     "id" => $dataAdmin['id'],
                     "photo" => $dataAdmin['photo']
-                ]
+                ],
+                "verifikasiPenghargaan" => $this->admin->getAllVerifikasiAndPenghargaan(),
             ];
             $this->view('admin/index', $data);
         } catch (Exception $e) {
@@ -73,4 +74,18 @@ class AdminController extends Controller
             $this->index($screen);
         }
     }
+    public function getVerifikasiDetail()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+            try {
+                $verifikasiId = $_POST['id'];
+                $detail = $this->admin->getVerifikasiAndPenghargaanByIdVerifikasi($verifikasiId);
+                echo json_encode($detail);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
+            }
+        }
+    }
+
 }

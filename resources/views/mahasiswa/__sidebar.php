@@ -22,7 +22,7 @@
                 <i class="fas fa-user"></i>
                 <span class="ml-3">Profile</span>
             </button>
-
+            <hr>
             <button type="button" class="sidebar-menu-btn w-full flex items-center px-4 py-2 mt-2 text-red-500 rounded-lg" id="tombol-keluar">
                 <i class="fas fa-sign-out-alt"></i>
                 <span class="ml-3">Keluar</span>
