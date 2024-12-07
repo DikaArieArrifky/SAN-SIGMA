@@ -168,7 +168,6 @@
                         <label style="font-size: 16px;"><strong>Nama Pembimbing:</strong></label>
                         <input type="text" class="form-control" readonly>
                     </div>
-
                     <div class="form-group">
                         <label style="font-size: 16px;"><strong>Verifikasi Pembimbing:</strong></label>
                         <input type="text" class="form-control" readonly>
@@ -188,8 +187,9 @@
                         <button class="doc-link" onclick="previewFile('poster')"><i class="fas fa-eye"></i> Preview Poster</button>
                     </div>
 
-                    <form method="POST" action="verifikasi_prestasi_admin">
-                        <input type="hidden" name="verifikasi_id" value="<?= $verifikasi['id'] ?>">
+                    <form method="POST" action="verifikasi_prestasi">
+                        <input type="hidden" name="pengId" id="pengId">
+                        <input type="hidden" name="id_admin" value=" <?= htmlspecialchars($data['admin']['id'] ?? '') ?>">
                         <div class="form-group verification-group">
                             <label style="font-size: 16px;"><strong>Status Verifikasi:</strong></label>
                             <div class="radio-group">
@@ -210,7 +210,7 @@
                             </div>
                             <div class="form-group"></div>
                             <label style="font-size: 16px;"><strong>Pesan Verifikasi:</strong></label>
-                            <textarea class="form-control" placeholder="Contoh: Dokumen Sudah Lengkap" required></textarea>
+                            <textarea class="form-control" placeholder="Contoh: Dokumen Sudah Lengkap" name="pesan" required></textarea>
                             <button class="btn btn-primary" style="margin-top: 20px; padding: 15px 30px; font-size: 18px; font-weight: bold; width: 100%; border-radius: 8px;">Submit</button>
                     </form>
                 </div>
@@ -222,7 +222,6 @@
 
 
             <script>
-
                 //button sort
                 function resetSortButtons(exceptButton) {
                     const buttons = document.querySelectorAll('.btn-info');
@@ -352,12 +351,12 @@
                         },
                         success: function(response) {
                             const data = JSON.parse(response);
+                            $('#pengId').val(data.pengId);
 
                             // Update modal content
                             $('.card img').attr('src', '<?= IMG ?>/file-prestasi/' + (data.file_photo_kegiatan || 'https://api.dicebear.com/6.x/avataaars/svg?seed='));
                             $('.card h3').text(data.judul);
                             $('.card h4').text(data.tempat);
-
                             // Update URL
                             $('.form-group a ').attr('href', data.url).text(data.url);
 

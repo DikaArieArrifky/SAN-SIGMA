@@ -85,6 +85,7 @@ class Admin extends Model implements IUserApp
             SELECT 
                 v.*,
                 p.*,
+                p.id as pengId,
                 t.nama as tingkatan_nama,
                 d.name as dosen_name,
                 d.nip as dosen_nip,
@@ -108,4 +109,79 @@ class Admin extends Model implements IUserApp
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }
+
+    // verifikasi section
+    public function updateVerification($verifikasiId, $status, $pesan,$idAdmin)
+{
+    try {
+        $this->db->beginTransaction();
+        // Update verification status
+        $query = $this->db->prepare("
+            UPDATE verifikasis 
+            SET verif_admin = :status,
+                pesan_admin = :pesan,
+                admin_id = :id_admin
+            WHERE id = :id
+        ");
+
+        $query->bindValue(":status", $status);
+        $query->bindValue(":pesan", $pesan);
+        $query->bindValue(":id", $verifikasiId);
+        $query->bindValue(":id_admin", $idAdmin);
+        $query->execute();
+
+        // Get verification statuses
+        $checkStatus = $this->db->prepare("
+            SELECT verif_admin, verif_pembimbing 
+            FROM verifikasis 
+            WHERE id = :id
+        ");
+        $checkStatus->bindValue(":id", $verifikasiId);
+        $checkStatus->execute();
+        $result = $checkStatus->fetch(PDO::FETCH_ASSOC);
+
+        // If both verified, update scores
+        if ($result['verif_admin'] === 'Terverifikasi' && 
+            $result['verif_pembimbing'] === 'Terverifikasi') {
+            
+            // Get prestasi details
+            $prestasi = $this->getVerifikasiAndPenghargaanByIdVerifikasi($verifikasiId);
+            
+            $queryUpdateVerifiedat = $this->db->prepare("
+                UPDATE verifikasis 
+                SET verifed_at = CURRENT_TIMESTAMP
+                WHERE id = :id
+            ");
+            $queryUpdateVerifiedat->bindValue(":id", $verifikasiId);
+            $queryUpdateVerifiedat->execute();
+
+            // Update mahasiswa score
+            $queryMhs = $this->db->prepare("
+                UPDATE mahasiswas 
+                SET score = COALESCE(score, 0) + :score 
+                WHERE nim = :nim
+            ");
+            $queryMhs->bindValue(":score", $prestasi['score']);
+            $queryMhs->bindValue(":nim", $prestasi['mahasiswa_nim']);
+            $queryMhs->execute();
+
+            // Update dosen score
+            $queryDosen = $this->db->prepare("
+                UPDATE dosens 
+                SET score = COALESCE(score, 0) + :score 
+                WHERE nip = :nip
+            ");
+            $queryDosen->bindValue(":score", $prestasi['score']);
+            $queryDosen->bindValue(":nip", $prestasi['dosen_nip']);
+            $queryDosen->execute();
+        }
+
+        $this->db->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $this->db->rollBack();
+        throw $e;
+    }
+}
 }

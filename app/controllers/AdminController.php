@@ -87,5 +87,30 @@ class AdminController extends Controller
             }
         }
     }
+    // tombol dari admin untuk verifikasi prestasi
+    public function verifikasi_prestasi() 
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            $verifikasiId = $_POST['pengId']; 
+            $status = $_POST['verification_status'] === 'accept' ? 'Terverifikasi' : 'DiTolak';
+            $pesan = $_POST['pesan'];
+            $id_admin = $_POST['id_admin'];
+
+
+            // Update verification status
+            $result = $this->admin->updateVerification($verifikasiId, $status, $pesan, $id_admin);
+
+            // Show success message using SweetAlert2
+            echo '<script>alert("Prestasi berhasil diinputkan");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi_prestasi"; }, 10);</script>';
+
+        } catch (Exception $e) {
+            // Show error message using SweetAlert2
+            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi_prestasi"; }, 3000);</script>';
+        }
+    }
+}
 
 }
