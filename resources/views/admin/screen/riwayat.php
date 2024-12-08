@@ -44,12 +44,16 @@
                         Verifikasi Admin
                     </th>
                     <th>
+                        Verifikasi Dosen
+                    </th>
+                    <th>
                         Aksi
                     </th>
+
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($data['verifikasiPenghargaan'] as $verifikasi): ?>
+                <?php foreach ($data['verifikasiPenghargaanOv'] as $verifikasi): ?>
                     <tr>
                         <td><?= htmlspecialchars($verifikasi['mahasiswa_name'] ?? '-') ?></td>
                         <td><?= htmlspecialchars($verifikasi['tanggal_mulai'] ?? '-') ?></td>
@@ -67,8 +71,17 @@
                             <?php endif; ?>
                         </td>
                         <td>
+                            <?php if ($verifikasi['verif_pembimbing'] === 'Terverifikasi'): ?>
+                                <i class="fas fa-check-circle" style="color: #28a745; font-size:2.5em"></i>
+                            <?php elseif ($verifikasi['verif_pembimbing'] === 'DiTolak'): ?>
+                                <i class="fas fa-times-circle" style="color: #dc3545; font-size:2.5em"></i>
+                            <?php else: ?>
+                                <i class="fas fa-clock" style="color: #ffc107; font-size:2.5em"></i>
+                            <?php endif; ?>
+                        </td>
+                        <td>
                             <button class="btn-view " data-toggle="modal" data-target="#modal-prestasi" onclick="viewDetail(<?= $verifikasi['id'] ?>)">
-                                Verifikasi
+                                Lihat
                             </button>
                         </td>
                     </tr>
@@ -77,26 +90,7 @@
 
             </tbody>
         </table>
-        <!-- <div class="pagination">
-            <button>
-                Prev
-            </button>
-            <button class="active">
-                1
-            </button>
-            <button>
-                2
-            </button>
-            <button>
-                ...
-            </button>
-            <button>
-                10
-            </button>
-            <button>
-                Next
-            </button>
-        </div> -->
+
     </div>
     </div>
 </body>
@@ -177,6 +171,14 @@
                         <label style="font-size: 16px;"><strong>Pesan Pembimbing:</strong></label>
                         <textarea class="form-control" readonly>Lengkap</textarea>
                     </div>
+                    <div class="form-group">
+                        <label style="font-size: 16px;"><strong>Verifikasi Admin:</strong></label>
+                        <input type="text" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 16px;"><strong>Pesan Admin:</strong></label>
+                        <textarea class="form-control" readonly>Sudah Lengkap</textarea>
+                    </div>
                     <h3>Dokumen Prestasi</h3>
                     <div class="form-group">
                         <label style="font-size: 16px;"><strong>File Sertifikat Lomba:</strong></label>
@@ -191,35 +193,11 @@
                         <input type="hidden" name="pengId" id="pengId">
                         <input type="hidden" name="id_admin" value=" <?= htmlspecialchars($data['admin']['id'] ?? '') ?>">
                         <div class="form-group verification-group">
-                            <label style="font-size: 16px;"><strong>Status Verifikasi:</strong></label>
-                            <div class="radio-group">
-                                <label class="radio-button">
-                                    <input type="radio" name="verification_status" value="reject" required>
-                                    <span class="radio-custom" style="font-size: 1.4em; padding: 15px 30px;">
-                                        <i class="fas fa-times"></i>
-                                        Tolak
-                                    </span>
-                                </label>
-                                <label class="radio-button">
-                                    <input type="radio" name="verification_status" value="accept" required>
-                                    <span class="radio-custom" style="font-size: 1.4em; padding: 15px 30px;">
-                                        <i class="fas fa-check"></i>
-                                        Setujui
-                                    </span>
-                                </label>
-                            </div>
-                            <div class="form-group"></div>
-                            <label style="font-size: 16px;"><strong>Pesan Verifikasi:</strong></label>
-                            <textarea class="form-control" placeholder="Contoh: Dokumen Sudah Lengkap" name="pesan" required></textarea>
-                            <button class="btn btn-primary" style="margin-top: 20px; padding: 15px 30px; font-size: 18px; font-weight: bold; width: 100%; border-radius: 8px;">Submit</button>
                     </form>
                 </div>
             </div>
 
-            <!-- <div class="scoreTambah">
-                        <h3>Jika Berhasil Terverifikasi</h3>
-                    </div> -->
-
+          
 
             <script>
                 //button sort
@@ -403,7 +381,47 @@
                                     case 'nama pembimbing':
                                         $(this).val(data.dosen_name + ' - NIP : ' + data.dosen_nip);
                                         break;
+                                    case 'verifikasi admin':
+                                        $(this).val(data.verif_admin);
+                                        if (data.verif_admin === 'Terverifikasi') {
+                                            $(this).css({
+                                                'color': '#28a745',
+                                                'font-weight': 'bold',
+                                                'background': 'linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.2) 100%)',
+                                                'border-radius': '6px',
+                                                'padding': '4px 12px',
+                                                'text-shadow': '0 1px 1px rgba(0,0,0,0.1)`',
+                                                'transition': 'all 0.3s ease'
+                                            });
+                                        } else if (data.verif_admin === 'DiTolak') {
+                                            $(this).css({
+                                                'color': '#dc3545',
+                                                'font-weight': 'bold',
+                                                'background': 'linear-gradient(135deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.2) 100%)',
 
+                                                'border-radius': '6px',
+                                                'padding': '4px 12px',
+                                                'text-shadow': '0 1px 1px rgba(0,0,0,0.1)',
+
+                                                'transition': 'all 0.3s ease'
+                                            });
+                                        } else {
+                                            $(this).css({
+                                                'color': '#ffc107',
+                                                'font-weight': 'bold',
+                                                'background': 'linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 193, 7, 0.2) 100%)',
+
+                                                'border-radius': '6px',
+                                                'padding': '4px 12px',
+
+                                                'box-shadow': '0 2px 4px rgba(255, 193, 7, 0.15)',
+                                                'transition': 'all 0.3s ease'
+                                            });
+                                        }
+                                        break;
+                                    case 'pesan admin':
+                                        $(this).val(data.pesan_admin);
+                                        break;
                                     case 'verifikasi pembimbing':
                                         $(this).val(data.verif_pembimbing);
                                         if (data.verif_pembimbing === 'Terverifikasi') {
@@ -500,4 +518,6 @@
 </div>
 </div>
 </body>
+
+
 

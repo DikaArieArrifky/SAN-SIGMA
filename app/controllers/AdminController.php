@@ -44,6 +44,7 @@ class AdminController extends Controller
                     "photo" => $dataAdmin['photo']
                 ],
                 "verifikasiPenghargaan" => $this->admin->getAllVerifikasiAndPenghargaan(),
+                "verifikasiPenghargaanOv" => $this->admin->getAllVerifikasiAndPenghargaanOv(),
             ];
             $this->view('admin/index', $data);
         } catch (Exception $e) {
