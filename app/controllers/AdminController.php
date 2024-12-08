@@ -5,17 +5,20 @@ require_once 'app/core/Database.php';
 require_once 'app/models/Login.php';
 require_once 'app/models/Admin.php';
 require_once 'app/models/Prodi.php';
+require_once 'app/models/Tingkatan.php';
 
 class AdminController extends Controller
 {
     private $admin;
     private $prodi;
+    private $tingkatan;
 
 
     public function __construct()
     {
         $this->admin = new Admin(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->prodi = new Prodi(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+        $this->tingkatan = new Tingkatan(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index($screen = "dashboard")
@@ -35,6 +38,7 @@ class AdminController extends Controller
             $chartAngkatanPrestasi = $this->admin->getCountAngkatanMahasiswa();
             $chartTahunVerifikasi = $this->admin->getCountTahunVerif();
             $prodis = $this->prodi->getAll();
+            $tingkatans = $this->tingkatan->getAll();
 
             if (!$dataAdmin) {
                 throw new Exception("Admin not found");
@@ -82,7 +86,8 @@ class AdminController extends Controller
                         ]
                     ]
                         ],
-                "prodis" => $prodis
+                "prodis" => $prodis,
+                "tingkatans" => $tingkatans
 
 
             ];
@@ -212,6 +217,69 @@ class AdminController extends Controller
             } catch (Exception $e) {
                 echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
                 echo '<script>setTimeout(function(){ window.location.href = "screen?screen=kelola_prodi"; }, 10);</script>';
+            }
+        }
+    }
+
+
+    //Tingkatan
+    public function kelola_tingkatan()
+    {
+        try {
+            $tingkatans = $this->tingkatan->getAll();
+            $data = [
+                "screen" => "kelola_tingkatan",
+                "title" => "Kelola Tingkatan",
+                "tingkatans" => $tingkatans
+            ];
+            $this->view('admin/kelola_tingkatan', $data);
+        } catch (Exception $e) {
+            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
+        }
+    }
+
+    public function createTingkatan()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $nama = $_POST['nama'];
+                $point = $_POST['point'];
+                $this->tingkatan->create($nama, $point);
+                echo json_encode(['success' => true, 'message' => 'Tingkatan berhasil ditambahkan']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function updateTingkatan()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $id = $_POST['id'];
+                $nama = $_POST['nama'];
+                $point = $_POST['point'];
+                $this->tingkatan->update($id, $nama, $point);
+                echo json_encode(['success' => true, 'message' => 'Tingkatan berhasil diupdate']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function deleteTingkatan()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $id = $_POST['id'];
+                $this->tingkatan->delete($id);
+                echo json_encode(['success' => true, 'message' => 'Tingkatan berhasil dihapus']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
             }
         }
     }

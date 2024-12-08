@@ -45,7 +45,7 @@
                 <i class="bi bi-building"></i>
                 <span class="ml-3">Kelola Prodi</span>
             </button>
-            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_tingakatan" name="screen">
+            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_tingkatan" name="screen">
                 <i class="bi bi-layers"></i>
                 <span class="ml-3">Kelola Tingkatan</span>
             </button>
@@ -109,7 +109,7 @@
             <button type="submit" value="kelola_prodi" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-building"></i>
             </button>
-            <button type="submit" value="kelola_tingakatan" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
+            <button type="submit" value="kelola_tingkatan" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-layers"></i>
             </button>
             <button type="submit" value="kelola_peringkat" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
