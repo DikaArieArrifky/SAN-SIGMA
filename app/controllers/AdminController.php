@@ -6,12 +6,15 @@ require_once 'app/models/Login.php';
 require_once 'app/models/Admin.php';
 require_once 'app/models/Prodi.php';
 require_once 'app/models/Tingkatan.php';
+require_once 'app/models/Peringkat.php';
 
 class AdminController extends Controller
 {
     private $admin;
     private $prodi;
     private $tingkatan;
+    private $peringkat;
+
 
 
     public function __construct()
@@ -19,6 +22,7 @@ class AdminController extends Controller
         $this->admin = new Admin(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->prodi = new Prodi(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->tingkatan = new Tingkatan(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+        $this->peringkat = new Peringkat(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index($screen = "dashboard")
@@ -39,6 +43,7 @@ class AdminController extends Controller
             $chartTahunVerifikasi = $this->admin->getCountTahunVerif();
             $prodis = $this->prodi->getAll();
             $tingkatans = $this->tingkatan->getAll();
+            $peringkats = $this->peringkat->getAll();
 
             if (!$dataAdmin) {
                 throw new Exception("Admin not found");
@@ -85,9 +90,10 @@ class AdminController extends Controller
                             'data' => $chartTahunVerifikasi['counts']
                         ]
                     ]
-                        ],
+                ],
                 "prodis" => $prodis,
-                "tingkatans" => $tingkatans
+                "tingkatans" => $tingkatans,
+                "peringkats" => $peringkats
 
 
             ];
@@ -277,6 +283,68 @@ class AdminController extends Controller
                 $id = $_POST['id'];
                 $this->tingkatan->delete($id);
                 echo json_encode(['success' => true, 'message' => 'Tingkatan berhasil dihapus']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    // CRUD for Peringkat
+    public function kelola_peringkat()
+    {
+        try {
+            $peringkats = $this->peringkat->getAll();
+            $data = [
+                "screen" => "kelola_peringkat",
+                "title" => "Kelola Peringkat",
+                "peringkats" => $peringkats
+            ];
+            $this->view('admin/kelola_peringkat', $data);
+        } catch (Exception $e) {
+            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
+        }
+    }
+
+    public function createPeringkat()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $nama = $_POST['nama'];
+                $multiple = $_POST['multiple'];
+                $this->peringkat->create($nama, $multiple);
+                echo json_encode(['success' => true, 'message' => 'Peringkat berhasil ditambahkan']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function updatePeringkat()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $id = $_POST['id'];
+                $nama = $_POST['nama'];
+                $multiple = $_POST['multiple'];
+                $this->peringkat->update($id, $nama, $multiple);
+                echo json_encode(['success' => true, 'message' => 'Peringkat berhasil diupdate']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function deletePeringkat()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $id = $_POST['id'];
+                $this->peringkat->delete($id);
+                echo json_encode(['success' => true, 'message' => 'Peringkat berhasil dihapus']);
             } catch (Exception $e) {
                 http_response_code(500);
                 echo json_encode(['success' => false, 'message' => $e->getMessage()]);
