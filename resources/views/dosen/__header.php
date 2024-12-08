@@ -1,25 +1,25 @@
-<header class="flex items-center justify-between px-7 py-4 bg-white border-b border-gray-200 ">
+<header class="flex items-center justify-between px-8 py-5 bg-white border-b-[1.2px] border-gray-200">
     <div class="flex items-center">
-        <button id="menu-toggle" class="text-gray-500 focus:outline-none text-xl">
-            <i class="fas fa-bars text-[1.25em]" id='sidebar-icon-open'></i>
+        <button id="menu-toggle" class="text-gray-500 focus:outline-none text-2xl">
+            <i class="fas fa-bars text-[1.5em]" id='sidebar-icon-open'></i>
         </button>
-        <nav class="ml-5" aria-label="Breadcrumb">
-            <ol class="flex items-center text-base text-gray-600">
-                <li><a href="#" class="hover:text-gray-900">Dosen</a></li>
-                <li class="mx-2">/</li>
-                <li class="font-semibold"><?= $data['screen'] ?></li>
+        <nav class="ml-6 mt-1" aria-label="Breadcrumb">
+            <ol class="flex items-center text-lg text-gray-600 mt-2 ml-4">
+                <li><a href="#" class="text-[15px] hover:text-gray-900">Dosen</a></li>
+                <li class="mx-6 text-[15px]">/</li>
+                <li class="text-[15px] font-semibold p-2"><?= $data['screen'] ?></li>
             </ol>
         </nav>
     </div>
     <div class="flex items-center">
-        <button class="text-gray-500 focus:outline-none text-xl">
+        <button class="text-gray-500 focus:outline-none text-4xl">
             <i class="fas fa-bell"></i>
         </button>
-        <div class="border-l-2 border-[#47b2e4] h-8 mx-4"></div>
+        <div class="border-l-[2px] border-[#47b2e4] h-14 mx-8"></div>
         <div class="flex items-center">
-            <img src="<?= ($data['dosen']['photo']) ? IMG.'/person/'.$data['dosen']['photo'] : 'https://api.dicebear.com/6.x/avataaars/svg?seed='.rand() ?>" 
-                 class="w-12 h-12 rounded-full object-cover">
-            <div class="ml-3 text-base">
+            <img src="<?= ($data['dosen']['photo']) ? IMG . '/person/' . $data['dosen']['photo'] : 'https://api.dicebear.com/6.x/avataaars/svg?seed=' . rand() ?>"
+                class="w-20 h-20 rounded-full object-cover">
+            <div class="ml-6 text-2xl">
                 <div class="font-semibold"><?= htmlspecialchars($data['dosen']['name'] ?? 'Unknown') ?></div>
                 <div class="text-gray-500"><?= htmlspecialchars($data['dosen']['nip'] ?? '') ?></div>
             </div>

@@ -6,6 +6,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="bg-gray-900 text-white w-[20rem] flex flex-col h-screen transition-all duration-300 sidebar-expanded" id="sidebar-open">
     <div class="flex items-center justify-center h-24 border-b border-gray-800">
         <img src="<?= IMG; ?>logo_sigma.png" alt="San Sigma Logo" class="h-14">
@@ -79,10 +80,9 @@
         });
     </script>
 </div>
-
-<div class="bg-gray-900 text-white w-28 flex flex-col h-screen transition-all duration-300 sidebar-minimized" id="sidebar-close">
-    <div class="flex items-center justify-center h-20 border-b border-gray-800">
-        <img src="<?= IMG; ?>logo_sigma.png" alt="San Sigma Logo" class="h-12">
+<div class="bg-gray-900 text-white w-[20rem] flex flex-col h-screen transition-all duration-300 sidebar-expanded" id="sidebar-close">
+    <div class="flex items-center justify-center h-24 border-b border-gray-800">
+        <img src="<?= IMG; ?>logo_sigma.png" alt="San Sigma Logo" class="h-14">
     </div>
     <form action="screen" method="get">
         <nav class="flex-1 px-2 py-4 flex flex-col items-center" id="nav-close">
