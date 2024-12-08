@@ -4,6 +4,7 @@ require_once 'app/models/Login.php';
 require_once 'app/models/Mahasiswa.php';
 require_once 'app/models/Admin.php';
 require_once 'app/models/Landing.php';
+require_once 'app/models/Dosen.php';
 
 class LoginController extends Controller
 {
@@ -11,6 +12,7 @@ class LoginController extends Controller
     private $mahasiswa;
     private $admin;
     private $landing;
+    private $dosen;
 
     public function __construct()
     {
@@ -18,6 +20,8 @@ class LoginController extends Controller
         $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->admin = new Admin(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->landing = new Landing(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+
+        $this->dosen = new Dosen(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index()

@@ -1,4 +1,12 @@
 <link href="<?= VENDOR; ?>/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="bg-gray-900 text-white w-64 flex flex-col h-screen transition-all duration-300 sidebar-expanded" id="sidebar-open">
     <div class="flex items-center justify-center h-20 border-b border-gray-800">
         <img src="<?= IMG; ?>logo_sigma.png" alt="San Sigma Logo" class="h-12">
@@ -6,11 +14,11 @@
     </div>
     <form action="screen" method="get">
         <nav class="flex-1 px-2 py-4" id="nav-open">
-            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-2 mt-2 text-gray-200 rounded-lg" name="screen" value="dashboard">
+            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-2 mt-2 text-gray-200 rounded-lg"  value="dashboard" name="screen">
                 <i class="fas fa-tachometer-alt"></i>
                 <span class="ml-3">Dashboard</span>
             </button>
-            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-2 mt-2 text-gray-200 rounded-lg" value="inputPrestasi" name="screen">
+            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-2 mt-2 text-gray-200 rounded-lg" value="verifikasi" name="screen">
             <i class="fas fa-check-circle"></i>
             <link rel="stylesheet" href="../screen/verifikasi.php">
             <span class="ml-3">Verifikasi</span>
