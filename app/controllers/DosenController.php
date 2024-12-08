@@ -60,8 +60,8 @@ class DosenController extends Controller
                 "passwordLama" => [
                     "password" => $this->dosen->getPasswordByUserId($_SESSION['user_id'])
                 ],
-                "verifikasiPenghargaan" => $this->dosen->getVerifikasiAndPenghargaanByNip($dosenData['nip']),
-                "verifikasiPenghargaanOv" => $this->dosen->getAllVerifikasiAndPenghargaanOv(),
+                "verifikasiPenghargaan" => $this->dosen->getDosenVerifikasiByNIP($dosenData['nip']),
+               
 
                 "dosenName" => $this->dosen->getAllDosen(),
 
@@ -102,7 +102,7 @@ class DosenController extends Controller
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
             try {
                 $verifikasiId = $_POST['id'];
-                $detail = $this->dosen->getVerifikasiAndPenghargaanByNip($verifikasiId);
+                $detail = $this->dosen->getVerifikasiAndPenghargaanByIdVerifikasi($verifikasiId);
                 echo json_encode($detail);
             } catch (Exception $e) {
                 http_response_code(500);
