@@ -363,30 +363,76 @@ class AdminController extends Controller
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
-            // Set the header
-            // Set the header
-            $sheet->setCellValue('A1', 'Nama Mahasiswa');
-            $sheet->setCellValue('B1', 'Tanggal Lomba');
-            $sheet->setCellValue('C1', 'Judul Lomba');
-            $sheet->setCellValue('D1', 'Tingkatan');
-            $sheet->setCellValue('E1', 'Verifikasi Admin');
-            $sheet->setCellValue('F1', 'Verifikasi Dosen');
-            $sheet->setCellValue('G1', 'Nama Prodi');
-            $sheet->setCellValue('H1', 'Nama Peringkat');
+            
+            // Set column headers
+            $headers = [
+                'A' => 'Nama Mahasiswa',
+                'B' => 'Tanggal Lomba', 
+                'C' => 'Judul Lomba',
+                'D' => 'Tingkatan',
+                'E' => 'Verifikasi Admin',
+                'F' => 'Verifikasi Dosen',
+                'G' => 'Nama Prodi',
+                'H' => 'Nama Peringkat'
+            ];
 
-            // Populate the data
+            // Style the header row
+            $headerStyle = [
+                'font' => [
+                    'bold' => true,
+                    'color' => ['rgb' => 'FFFFFF']
+                ],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => '4472C4']
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER
+                ]
+            ];
+
+            // Apply headers and styling
+            foreach ($headers as $col => $text) {
+                $sheet->setCellValue($col . '1', $text);
+                $sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+            $sheet->getStyle('A1:H1')->applyFromArray($headerStyle);
+
+            // Add data rows with styling
             $row = 2;
+            $dataStyle = [
+                'alignment' => [
+                    'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER
+                ],
+                'borders' => [
+                    'allBorders' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+                    ]
+                ]
+            ];
+
             foreach ($verifikasiPenghargaanOv as $verifikasi) {
-                $sheet->setCellValue('A' . $row, $verifikasi['mahasiswa_name'] ?? '-');
-                $sheet->setCellValue('B' . $row, $verifikasi['tanggal_mulai'] ?? '-');
-                $sheet->setCellValue('C' . $row, $verifikasi['judul'] ?? '-');
-                $sheet->setCellValue('D' . $row, $verifikasi['tingkatan_nama'] ?? '-');
-                $sheet->setCellValue('E' . $row, $verifikasi['verif_admin'] ?? '-');
-                $sheet->setCellValue('F' . $row, $verifikasi['verif_pembimbing'] ?? '-');
-                $sheet->setCellValue('G' . $row, $verifikasi['prodi_nama'] ?? '-');
-                $sheet->setCellValue('H' . $row, $verifikasi['peringkat_nama'] ?? '-');
+                $data = [
+                    $verifikasi['mahasiswa_name'] ?? '-',
+                    $verifikasi['tanggal_mulai'] ?? '-', 
+                    $verifikasi['judul'] ?? '-',
+                    $verifikasi['tingkatan_nama'] ?? '-',
+                    $verifikasi['verif_admin'] ?? '-',
+                    $verifikasi['verif_pembimbing'] ?? '-',
+                    $verifikasi['prodi_nama'] ?? '-',
+                    $verifikasi['peringkat_nama'] ?? '-'
+                ];
+                
+                $sheet->fromArray([$data], null, 'A' . $row);
                 $row++;
             }
+
+            // Apply styling to data range
+            $lastRow = $row - 1;
+            $sheet->getStyle('A1:H' . $lastRow)->applyFromArray($dataStyle);
+
+            // Set zoom level
+            $sheet->getSheetView()->setZoomScale(85);
 
             $writer = new Xlsx($spreadsheet);
             $fileName = 'verifikasi_prestasi.xlsx';
