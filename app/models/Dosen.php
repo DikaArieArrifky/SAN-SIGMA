@@ -2,7 +2,7 @@
 
 require_once 'app/core/Model.php';
 
-class Dosen extends Model
+class Dosen extends Model 
 {
     public function __construct($db)
     {
@@ -192,8 +192,33 @@ class Dosen extends Model
             LEFT JOIN tingkatans t ON p.tingkat_id = t.id
             LEFT JOIN dosens d ON v.dosen_nip = d.nip
             LEFT JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
-            
             WHERE v.dosen_nip = :nip
+            ORDER BY v.created_at DESC
+        ");
+        
+        $query->bindValue(":nip", $nip);
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+        
+    }
+    public function getDosenProsesVerifikasiByNIP($nip)
+    {
+        $query = $this->db->prepare("
+            SELECT 
+                v.*,
+                p.*,
+                t.nama as tingkatan_nama,
+                d.name as dosen_name,
+                m.name as mahasiswa_name
+
+
+            FROM verifikasis v
+            LEFT JOIN penghargaans p ON v.penghargaan_id = p.id
+            LEFT JOIN tingkatans t ON p.tingkat_id = t.id
+            LEFT JOIN dosens d ON v.dosen_nip = d.nip
+            LEFT JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
+            
+            WHERE v.verif_pembimbing = 'Diproses' and v.dosen_nip = :nip 
             ORDER BY v.created_at DESC
         ");
         
@@ -232,5 +257,79 @@ class Dosen extends Model
         $query->bindValue(":id", $idVerifikasi);
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateVerification($verifikasiId, $status, $pesan)
+    {
+        try {
+            $this->db->beginTransaction();
+            // Update verification status
+            $query = $this->db->prepare("
+            UPDATE verifikasis 
+            SET verif_pembimbing = :status,
+                pesan_pembimbing = :pesan
+            WHERE id = :id
+        ");
+
+            $query->bindValue(":status", $status);
+            $query->bindValue(":pesan", $pesan);
+            $query->bindValue(":id", $verifikasiId);
+           
+            $query->execute();
+
+            // Get verification statuses
+            $checkStatus = $this->db->prepare("
+            SELECT verif_admin, verif_pembimbing 
+            FROM verifikasis 
+            WHERE id = :id
+        ");
+            $checkStatus->bindValue(":id", $verifikasiId);
+            $checkStatus->execute();
+            $result = $checkStatus->fetch(PDO::FETCH_ASSOC);
+
+            // If both verified, update scores
+            if (
+                $result['verif_admin'] === 'Terverifikasi' &&
+                $result['verif_pembimbing'] === 'Terverifikasi'
+            ) {
+
+                // Get prestasi details
+                $prestasi = $this->getVerifikasiAndPenghargaanByIdVerifikasi($verifikasiId);
+
+                $queryUpdateVerifiedat = $this->db->prepare("
+                UPDATE verifikasis 
+                SET verifed_at = CURRENT_TIMESTAMP
+                WHERE id = :id
+            ");
+                $queryUpdateVerifiedat->bindValue(":id", $verifikasiId);
+                $queryUpdateVerifiedat->execute();
+
+                // Update mahasiswa score
+                $queryMhs = $this->db->prepare("
+                UPDATE mahasiswas 
+                SET score = COALESCE(score, 0) + :score 
+                WHERE nim = :nim
+            ");
+                $queryMhs->bindValue(":score", $prestasi['score']);
+                $queryMhs->bindValue(":nim", $prestasi['mahasiswa_nim']);
+                $queryMhs->execute();
+
+                // Update dosen score
+                $queryDosen = $this->db->prepare("
+                UPDATE dosens 
+                SET score = COALESCE(score, 0) + :score 
+                WHERE nip = :nip
+            ");
+                $queryDosen->bindValue(":score", $prestasi['score']);
+                $queryDosen->bindValue(":nip", $prestasi['dosen_nip']);
+                $queryDosen->execute();
+            }
+
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            throw $e;
+        }
     }
 }

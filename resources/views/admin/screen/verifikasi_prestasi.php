@@ -151,6 +151,7 @@
                 </div>
                 <div class="details">
                     <h3>Detail Prestasi</h3>
+                    <a class="back-button" data-dismiss="modal" type="button"><i class="fas fa-arrow-left"></i> Kembali</a>
                     <div class="form-group">
                         <label style="font-size: 16px;"><strong>Nama Mahasiswa:</strong></label>
                         <input type="text" class="form-control" readonly>
@@ -216,9 +217,6 @@
                 </div>
             </div>
 
-            <!-- <div class="scoreTambah">
-                        <h3>Jika Berhasil Terverifikasi</h3>
-                    </div> -->
 
 
             <script>
@@ -492,7 +490,7 @@
                 }
             </script>
 
-            <a class="back-button" data-dismiss="modal" type="button"><i class="fas fa-arrow-left"></i> Kembali</a>
+          
         </div>
 
 

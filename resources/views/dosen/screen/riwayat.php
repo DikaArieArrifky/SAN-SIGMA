@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="<?= CSS; ?>/dosen.css">
+
 <body>
 
     <div class="table-container">
@@ -18,12 +19,27 @@
                 </i>
                 Judul
             </button>
-            <div class="search-container col-8">
+            <button class="btn-verified" id="filter-verified">
+                <i class="fas fa-filter"></i>
+                Terverifikasi
+            </button>
+            <button class="btn-rejected">
+                <i class="fas fa-filter">
+                </i>
+                Ditolak
+            </button>
+            <button class="btn-warning">
+                <i class="fas fa-filter">
+                </i>
+                Diproses
+            </button>
+            <div class="search-container col-6">
                 <input type="text" id="search-input" placeholder="Search...">
                 <button id="search-button">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
+
         </div>
 
         <table>
@@ -146,6 +162,7 @@
                 </div>
                 <div class="details">
                     <h3>Detail Prestasi</h3>
+                    <a class="back-button" data-dismiss="modal" type="button"><i class="fas fa-arrow-left"></i> Kembali</a>
                     <div class="form-group">
                         <label style="font-size: 16px;"><strong>Nama Mahasiswa:</strong></label>
                         <input type="text" class="form-control" readonly>
@@ -198,7 +215,7 @@
                 </div>
             </div>
 
-          
+
 
             <script>
                 //button sort
@@ -509,6 +526,45 @@
                         });
                     }
                 }
+                $('#filter-verified').click(function() {
+                    $(this).toggleClass('active');
+                    if ($(this).hasClass('active')) {
+                        $('tbody tr').hide();
+                        $('tbody tr').filter(function() {
+                            return $(this).find('td:eq(4) i').hasClass('fa-check-circle') &&
+                                $(this).find('td:eq(5) i').hasClass('fa-check-circle');
+                        }).show();
+                    } else {
+                        $('tbody tr').show();
+                    }
+                });
+
+                $('.btn-rejected').click(function() {
+                    $(this).toggleClass('active');
+                    if ($(this).hasClass('active')) {
+                        $('tbody tr').hide();
+                        $('tbody tr').filter(function() {
+                            return $(this).find('td:eq(3) i').hasClass('fa-times-circle') ||
+                                $(this).find('td:eq(4) i').hasClass('fa-times-circle');
+                        }).show();
+                    } else {
+                        $('tbody tr').show();
+                    }
+                });
+
+
+                $('.btn-warning').click(function() {
+                    $(this).toggleClass('active');
+                    if ($(this).hasClass('active')) {
+                        $('tbody tr').hide();
+                        $('tbody tr').filter(function() {
+                            return $(this).find('td:eq(4) i').hasClass('fa-clock') ||
+                                $(this).find('td:eq(5) i').hasClass('fa-clock');
+                        }).show();
+                    } else {
+                        $('tbody tr').show();
+                    }
+                });
             </script>
 
             <a class="back-button" data-dismiss="modal" type="button"><i class="fas fa-arrow-left"></i> Kembali</a>
@@ -519,6 +575,3 @@
 </div>
 </div>
 </body>
-
-
-
