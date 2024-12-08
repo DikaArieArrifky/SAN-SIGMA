@@ -173,4 +173,111 @@ class Mahasiswa extends Model implements IUserApp
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function getTingkatanLomba()
+    {
+        $query = $this->db->prepare("SELECT id, nama FROM tingkatans WHERE visible_tingkatans = 1");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPeringkatLomba()
+    {
+        $query = $this->db->prepare("SELECT * FROM peringkats  WHERE visible_peringkats = 1");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function calculateScore($tingkatId, $peringkatId)
+    {
+        $query = $this->db->prepare("SELECT multiple FROM peringkats WHERE id = :peringkat_id");
+        $query->bindValue(":peringkat_id", $peringkatId);
+        $query->execute();
+        $peringkat = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$peringkat) {
+            throw new Exception("Peringkat not found");
+        }
+
+        $query = $this->db->prepare("SELECT point FROM tingkatans WHERE id = :tingkat_id");
+        $query->bindValue(":tingkat_id", $tingkatId);
+        $query->execute();
+        $tingkat = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$tingkat) {
+            throw new Exception("Tingkat not found");
+        }
+
+        return $peringkat['multiple'] * $tingkat['point'];
+    }
+public function insertPrestasi($data)
+{
+    $query = $this->db->prepare("
+        INSERT INTO penghargaans (
+            mahasiswa_nim, 
+            judul, 
+            tempat, 
+            url, 
+            tanggal_mulai, 
+            tanggal_akhir, 
+            jumlah_instansi, 
+            jumlah_peserta,
+            tingkat_id, 
+            peringkat_id, 
+            score,
+            file_sertifikat, 
+            file_poster, 
+            file_photo_kegiatan
+        ) VALUES (
+            :mahasiswa_nim, 
+            :judul, 
+            :tempat, 
+            :url,
+            :tanggal_mulai, 
+            :tanggal_akhir,
+            :jumlah_instansi, 
+            :jumlah_peserta,
+            :tingkat_id, 
+            :peringkat_id, 
+            :score,
+            :file_sertifikat, 
+            :file_poster, 
+            :file_photo_kegiatan
+        )
+    ");
+    
+    // Bind parameters explicitly
+    $query->bindValue(':mahasiswa_nim', $data['mahasiswa_nim']);
+    $query->bindValue(':judul', $data['judul']);
+    $query->bindValue(':tempat', $data['tempat']);
+    $query->bindValue(':url', $data['url']);
+    $query->bindValue(':tanggal_mulai', $data['tanggal_mulai']);
+    $query->bindValue(':tanggal_akhir', $data['tanggal_akhir']);
+    $query->bindValue(':jumlah_instansi', $data['jumlah_instansi']);
+    $query->bindValue(':jumlah_peserta', $data['jumlah_peserta']);
+    $query->bindValue(':tingkat_id', $data['tingkat_id']);
+    $query->bindValue(':peringkat_id', $data['peringkat_id']);
+    $query->bindValue(':score', $data['score']);
+    $query->bindValue(':file_sertifikat', $data['file_sertifikat']);
+    $query->bindValue(':file_poster', $data['file_poster']);
+    $query->bindValue(':file_photo_kegiatan', $data['file_photo_kegiatan']);
+    
+    $query->execute();
+    return $this->db->lastInsertId();
 }
+
+public function insertVerifikasi($data)
+{
+    $query = $this->db->prepare("
+        INSERT INTO verifikasis (
+            mahasiswa_nim, dosen_nip, penghargaan_id,
+            verif_admin, verif_pembimbing
+        ) VALUES (
+            :mahasiswa_nim, :dosen_nip, :penghargaan_id,
+            :verif_admin, :verif_pembimbing
+        )
+    ");
+    
+    $query->execute($data);
+    return $this->db->lastInsertId();
+}
+    
+}
+

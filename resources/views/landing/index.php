@@ -128,20 +128,28 @@
                     </script>
                     <div class="swiper-wrapper align-items-center">
                         <div class="swiper-slide"><img src="<?= IMG; ?>/clients/pimnas.png" class="img-fluid"
+                                target="_blank" onClick="window.open('https://pimnas37.unair.ac.id/');"
                                 alt=""></div>
                         <div class="swiper-slide"><img src="<?= IMG; ?>/clients/kmipn.png" class="img-fluid"
+                                target="_blank" onClick="window.open('https://www.instagram.com/kmipn2024_pnj/');"
                                 alt=""></div>
                         <div class="swiper-slide"><img src="<?= IMG; ?>/clients/codejam.png" class="img-fluid"
+                                target="_blank" onClick="window.open('https://en.wikipedia.org/wiki/Google_Code_Jam');"
                                 alt=""></div>
                         <div class="swiper-slide"><img src="<?= IMG; ?>/clients/gemastik.png" class="img-fluid"
+                                target="_blank" onClick="window.open('https://gemastik.kemdikbud.go.id/');"
                                 alt=""></div>
                         <div class="swiper-slide"><img src="<?= IMG; ?>/clients/playit.png" class="img-fluid"
+                                target="_blank" onClick="window.open('https://jti.polinema.ac.id/playit2024/');"
                                 alt=""></div>
                         <div class="swiper-slide"><img src="<?= IMG; ?>/clients/pkm.png" class="img-fluid"
+                                target="_blank" onClick="window.open('https://lldikti6.kemdikbud.go.id/program-kreativitas-mahasiswa-pkm-5-bidang/');"
                                 alt=""></div>
                         <div class="swiper-slide"><img src="<?= IMG; ?>/clients/porseni.png" class="img-fluid"
+                                target="_blank" onClick="window.open('http://porseni.polinema.ac.id/');"
                                 alt=""></div>
                         <div class="swiper-slide"><img src="<?= IMG; ?>/clients/worldskill.png" class="img-fluid"
+                                target="_blank" onClick="window.open('https://worldskills.org/');"
                                 alt=""></div>
                     </div>
                 </div>
@@ -166,7 +174,7 @@
                             SAN SIGMA atau Sistem Pencatatan Prestasi Digital Mahasiswa ini dirancang untuk mencatat dan mengelola informasi prestasi mahasiswa di Polinema
                             secara terpusat dan terstruktur.
                         </p>
-                        <h4> Dibuat Oleh Kelompok</h4>
+                        <h4> Dibuat Oleh Kelompok 2</h4>
                         <ul style="list-style: none; padding: 0;">
                             <li style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <i class="bi bi-check2-circle" style="margin-right: 10px;"></i>
@@ -182,11 +190,6 @@
                                 <i class="bi bi-check2-circle" style="margin-right: 10px;"></i>
                                 <span style="width: 200px;">NOKLENT FARDIAN ERIX</span>
                                 <span>: 2341720082</span>
-                            </li>
-                            <li style="display: flex; align-items: center; margin-bottom: 5px;">
-                                <i class="bi bi-check2-circle" style="margin-right: 10px;"></i>
-                                <span style="width: 200px;">SATRIO AHMAD R</span>
-                                <span>: 2341720163</span>
                             </li>
                             <li style="display: flex; align-items: center; margin-bottom: 5px;">
                                 <i class="bi bi-check2-circle" style="margin-right: 10px;"></i>
@@ -297,9 +300,9 @@
                                         <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3"
                                             style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); 
                              width: 50px; text-align: center;">
-                                            <?= ($index + 1) . 'th'; ?>
+                                            <?= ($index + 1) . ($index + 1 == 1 ? 'st' : ($index + 1 == 2 ? 'nd' : ($index + 1 == 3 ? 'rd' : 'th'))) ?>
                                         </span>
-                                        <span><?= $prestasi['mahasiswa_name'] . ' - ' . $prestasi['judul'].' - '.$prestasi['tingkatan_name']; ?></span>
+                                        <span><?= $prestasi['mahasiswa_name'] . ' - ' . $prestasi['judul'] . ' - ' . $prestasi['tingkatan_name']; ?></span>
                                     </li>
                                 <?php endforeach; ?>
                             </ol>
@@ -314,7 +317,7 @@
                             <ol class="p-0" style="list-style: none;">
                                 <?php foreach ($data['top10mahasiswas'] as $index => $mahasiswa): ?>
                                     <li class="d-flex align-items-center mb-3">
-                                        <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"><?= ($index + 1) . 'th'; ?></span>
+                                        <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"> <?= ($index + 1) . ($index + 1 == 1 ? 'st' : ($index + 1 == 2 ? 'nd' : ($index + 1 == 3 ? 'rd' : 'th'))) ?></span>
                                         <span><?= $mahasiswa['name'] . ' - ' . $mahasiswa['score'] . ' Points'; ?></span>
                                     </li>
                                 <?php endforeach; ?>
@@ -329,7 +332,7 @@
                             <ol class="p-0" style="list-style: none;">
                                 <?php foreach ($data['top10dosen'] as $index => $dosen): ?>
                                     <li class="d-flex align-items-center mb-3">
-                                        <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"><?= ($index + 1) . 'th'; ?></span>
+                                        <span class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $index == 0 ? '#FFD700, #FFA500' : ($index == 1 ? '#C0C0C0, #D3D3D3' : ($index == 2 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"> <?= ($index + 1) . ($index + 1 == 1 ? 'st' : ($index + 1 == 2 ? 'nd' : ($index + 1 == 3 ? 'rd' : 'th'))) ?></span>
                                         <span><?= $dosen['name'] . ' - ' . $dosen['score'] . ' Points'; ?></span>
                                     </li>
                                 <?php endforeach; ?>

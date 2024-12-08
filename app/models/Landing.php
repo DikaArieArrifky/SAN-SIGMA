@@ -47,7 +47,7 @@ class Landing extends Model
             JOIN tingkatans t ON p.tingkat_id = t.id
             WHERE v.verif_admin = 'Terverifikasi' 
             AND v.verif_pembimbing = 'Terverifikasi'
-            ORDER BY v.id DESC
+            ORDER BY v.verifed_at DESC
         ");
 
         $query->execute();
