@@ -311,4 +311,5 @@ ORDER BY year ASC");
 
         return $formatted;
     }
+    
 }
