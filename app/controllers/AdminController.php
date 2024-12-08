@@ -30,6 +30,9 @@ class AdminController extends Controller
         try {
             // Fetch admin data from database by user_id
             $dataAdmin = $this->admin->getAdminByUserId($_SESSION['user_id']);
+            $chartTingakatanPrestasi = $this->admin->getCountNameTingkatanPenghargaanByVerifTerverifikasi();
+            $chartAngkatanPrestasi = $this->admin->getCountAngkatanMahasiswa();
+            $chartTahunVerifikasi = $this->admin->getCountTahunVerif();
 
             if (!$dataAdmin) {
                 throw new Exception("Admin not found");
@@ -45,6 +48,38 @@ class AdminController extends Controller
                 ],
                 "verifikasiPenghargaan" => $this->admin->getAllVerifikasiAndPenghargaan(),
                 "verifikasiPenghargaanOv" => $this->admin->getAllVerifikasiAndPenghargaanOv(),
+                "countAllPenghargaan" => $this->admin->getCountAllPenghargaan(),
+                "countAllVerifiedPenghargaan" => $this->admin->getAllCountVerifiedPenghargaan(),
+                "countAllNotVerifiedPenghargaan" => $this->admin->getAllCountNotVerifiedPenghargaan(),
+
+
+                "chartTingakatan" => [
+                    'labels' => $chartTingakatanPrestasi['labels'],
+                    'datasets' => [
+                        [
+
+                            'data' => $chartTingakatanPrestasi['counts']
+                        ]
+                    ]
+                ],
+
+                "chartAngkatan" => [
+                    'labels' => $chartAngkatanPrestasi['labels'],
+                    'datasets' => [
+                        [
+                            'data' => $chartAngkatanPrestasi['counts']
+                        ]
+                    ]
+                ],
+                
+                "chartTahunVerification" => [ 
+                    'labels' => $chartTahunVerifikasi['labels'],
+                    'datasets' => [
+                        [
+                            'data' => $chartTahunVerifikasi['counts']
+                        ]
+                    ]
+                ]
             ];
             $this->view('admin/index', $data);
         } catch (Exception $e) {
@@ -89,29 +124,27 @@ class AdminController extends Controller
         }
     }
     // tombol dari admin untuk verifikasi prestasi
-    public function verifikasi_prestasi() 
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        try {
-            $verifikasiId = $_POST['pengId']; 
-            $status = $_POST['verification_status'] === 'accept' ? 'Terverifikasi' : 'DiTolak';
-            $pesan = $_POST['pesan'];
-            $id_admin = $_POST['id_admin'];
+    public function verifikasi_prestasi()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $verifikasiId = $_POST['pengId'];
+                $status = $_POST['verification_status'] === 'accept' ? 'Terverifikasi' : 'DiTolak';
+                $pesan = $_POST['pesan'];
+                $id_admin = $_POST['id_admin'];
 
 
-            // Update verification status
-            $result = $this->admin->updateVerification($verifikasiId, $status, $pesan, $id_admin);
+                // Update verification status
+                $result = $this->admin->updateVerification($verifikasiId, $status, $pesan, $id_admin);
 
-            // Show success message using SweetAlert2
-            echo '<script>alert("Prestasi berhasil diinputkan");</script>';
-            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi_prestasi"; }, 10);</script>';
-
-        } catch (Exception $e) {
-            // Show error message using SweetAlert2
-            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
-            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi_prestasi"; }, 3000);</script>';
+                // Show success message using SweetAlert2
+                echo '<script>alert("Prestasi berhasil diinputkan");</script>';
+                echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi_prestasi"; }, 10);</script>';
+            } catch (Exception $e) {
+                // Show error message using SweetAlert2
+                echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+                echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi_prestasi"; }, 3000);</script>';
+            }
         }
     }
-}
-
 }
