@@ -79,6 +79,29 @@ class Admin extends Model implements IUserApp
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getAllVerifikasiAndPenghargaanOv()
+    {
+        $query = $this->db->prepare("
+            SELECT 
+                v.*,
+                p.*,
+                t.nama as tingkatan_nama,
+                d.name as dosen_name,
+                m.name as mahasiswa_name
+
+            FROM verifikasis v
+            LEFT JOIN penghargaans p ON v.penghargaan_id = p.id
+            LEFT JOIN tingkatans t ON p.tingkat_id = t.id
+            LEFT JOIN dosens d ON v.dosen_nip = d.nip
+            LEFT JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
+             where v.verif_admin !='DiProses' and v.visible_verifikasis = '1'
+            ORDER BY v.created_at DESC
+           
+        ");
+
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function getVerifikasiAndPenghargaanByIdVerifikasi($idVerifikasi)
     {
         $query = $this->db->prepare("
