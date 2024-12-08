@@ -27,11 +27,15 @@
                 Ditolak
             </button>
             <button class="btn-warning">
-                <i class="fas fa-filter">
-                </i>
+                <i class="fas fa-filter"></i>
                 Diproses
             </button>
-            <div class="search-container col-6">
+            <button class="btn-excel" style="background-color: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="window.location.href='exportExcel'">
+                <i class="fas fa-file-excel"></i>
+                Export Excel
+            </button>
+
+            <div class="search-container col-5">
                 <input type="text" id="search-input" placeholder="Search...">
                 <button id="search-button">
                     <i class="fas fa-search"></i>

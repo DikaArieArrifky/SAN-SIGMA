@@ -83,20 +83,23 @@ class Admin extends Model implements IUserApp
     {
         $query = $this->db->prepare("
             SELECT 
-                v.*,
-                p.*,
-                t.nama as tingkatan_nama,
-                d.name as dosen_name,
-                m.name as mahasiswa_name
+            v.*,
+            p.*,
+            t.nama as tingkatan_nama,
+            d.name as dosen_name,
+            m.name as mahasiswa_name,
+            per.nama as peringkat_nama,
+            prod.nama as prodi_nama
 
             FROM verifikasis v
             LEFT JOIN penghargaans p ON v.penghargaan_id = p.id
             LEFT JOIN tingkatans t ON p.tingkat_id = t.id
             LEFT JOIN dosens d ON v.dosen_nip = d.nip
             LEFT JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
+            LEFT JOIN peringkats per ON p.peringkat_id = per.id
+            LEFT JOIN prodis prod ON m.prodi_id = prod.id
              where v.verif_admin !='DiProses' and v.visible_verifikasis = '1'
             ORDER BY v.created_at DESC
-           
         ");
 
         $query->execute();

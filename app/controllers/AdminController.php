@@ -7,6 +7,10 @@ require_once 'app/models/Admin.php';
 require_once 'app/models/Prodi.php';
 require_once 'app/models/Tingkatan.php';
 require_once 'app/models/Peringkat.php';
+require 'vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class AdminController extends Controller
 {
@@ -349,6 +353,55 @@ class AdminController extends Controller
                 http_response_code(500);
                 echo json_encode(['success' => false, 'message' => $e->getMessage()]);
             }
+        }
+    }
+    public function exportExcel()
+    {
+        try {
+            $verifikasiPenghargaanOv = $this->admin->getAllVerifikasiAndPenghargaanOv();
+
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
+
+            // Set the header
+            // Set the header
+            $sheet->setCellValue('A1', 'Nama Mahasiswa');
+            $sheet->setCellValue('B1', 'Tanggal Lomba');
+            $sheet->setCellValue('C1', 'Judul Lomba');
+            $sheet->setCellValue('D1', 'Tingkatan');
+            $sheet->setCellValue('E1', 'Verifikasi Admin');
+            $sheet->setCellValue('F1', 'Verifikasi Dosen');
+            $sheet->setCellValue('G1', 'Nama Prodi');
+            $sheet->setCellValue('H1', 'Nama Peringkat');
+
+            // Populate the data
+            $row = 2;
+            foreach ($verifikasiPenghargaanOv as $verifikasi) {
+                $sheet->setCellValue('A' . $row, $verifikasi['mahasiswa_name'] ?? '-');
+                $sheet->setCellValue('B' . $row, $verifikasi['tanggal_mulai'] ?? '-');
+                $sheet->setCellValue('C' . $row, $verifikasi['judul'] ?? '-');
+                $sheet->setCellValue('D' . $row, $verifikasi['tingkatan_nama'] ?? '-');
+                $sheet->setCellValue('E' . $row, $verifikasi['verif_admin'] ?? '-');
+                $sheet->setCellValue('F' . $row, $verifikasi['verif_pembimbing'] ?? '-');
+                $sheet->setCellValue('G' . $row, $verifikasi['prodi_nama'] ?? '-');
+                $sheet->setCellValue('H' . $row, $verifikasi['peringkat_nama'] ?? '-');
+                $row++;
+            }
+
+            $writer = new Xlsx($spreadsheet);
+            $fileName = 'verifikasi_prestasi.xlsx';
+
+            // Redirect output to a client’s web browser (Xlsx)
+            header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            header('Content-Disposition: attachment;filename="' . $fileName . '"');
+            header('Cache-Control: max-age=0');
+            header('Cache-Control: max-age=1');
+
+            $writer->save('php://output');
+            exit;
+        } catch (Exception $e) {
+            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=riwayat"; }, 10);</script>';
         }
     }
 }
