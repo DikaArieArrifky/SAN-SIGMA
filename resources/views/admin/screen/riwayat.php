@@ -1,5 +1,6 @@
-<body>
+<link rel="stylesheet" href="<?= CSS; ?>/admin.css">
 
+<body>
     <div class="table-container">
         <div class="table-header">
 

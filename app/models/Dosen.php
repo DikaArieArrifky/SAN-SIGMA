@@ -174,7 +174,6 @@ class Dosen extends Model
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Tambahan untuk getDosenVerifikasiByNIP
 
     public function getDosenVerifikasiByNIP($nip)
     {

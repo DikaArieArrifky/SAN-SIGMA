@@ -68,7 +68,8 @@ class AdminController extends Controller
                 "admin" => [
                     "name" => $dataAdmin['name'],
                     "id" => $dataAdmin['id'],
-                    "photo" => $dataAdmin['photo']
+                    "photo" => $dataAdmin['photo'],
+                    "phone_number" => $dataAdmin['phone_number'],
                 ],
                 "verifikasiPenghargaan" => $this->admin->getAllVerifikasiAndPenghargaan(),
                 "verifikasiPenghargaanOv" => $this->admin->getAllVerifikasiAndPenghargaanOv(),
@@ -84,6 +85,10 @@ class AdminController extends Controller
                             'data' => $chartTingakatanPrestasi['counts']
                         ]
                     ]
+                ],
+
+                "passwordLama" => [
+                    "password" => $this->admin->getPasswordByUserId($_SESSION['user_id'])
                 ],
 
                 "chartAngkatan" => [
