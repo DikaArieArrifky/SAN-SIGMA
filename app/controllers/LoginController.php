@@ -4,6 +4,7 @@ require_once 'app/models/Login.php';
 require_once 'app/models/Mahasiswa.php';
 require_once 'app/models/Admin.php';
 require_once 'app/models/Landing.php';
+require_once 'app/models/Dosen.php';
 
 class LoginController extends Controller
 {
@@ -92,5 +93,19 @@ class LoginController extends Controller
                 echo "Username atau Password Salah";
                 break;
         }
+    }
+    public function hallOfFame()
+    {
+        $db = Database::getInstance(getDatabaseConfig(), 'handleError');
+        $mahasiswaModel = new Mahasiswa($db);
+        $dosenModel = new Dosen($db);
+
+        $data['mahasiswa'] = $mahasiswaModel->getProdiNameByMhsProdiId();
+        $data['dosen'] = $dosenModel->getProdiDosen();
+
+    //     var_dump($data['mahasiswa']);
+    // exit();
+
+        $this->view('landing/more/hallOfFame', $data);
     }
 }
