@@ -1,8 +1,8 @@
 <?php
 
 require_once 'app/core/Model.php';
-
-class Dosen extends Model
+require_once 'app/core/IUserApp.php';
+class Dosen extends Model implements IUserApp
 {
     public function __construct($db)
     {
@@ -174,7 +174,6 @@ class Dosen extends Model
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Tambahan untuk getDosenVerifikasiByNIP
 
     public function getDosenVerifikasiByNIP($nip)
     {

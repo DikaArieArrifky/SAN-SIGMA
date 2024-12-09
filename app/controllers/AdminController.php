@@ -44,7 +44,8 @@ class AdminController extends Controller
                 "admin" => [
                     "name" => $dataAdmin['name'],
                     "id" => $dataAdmin['id'],
-                    "photo" => $dataAdmin['photo']
+                    "photo" => $dataAdmin['photo'],
+                    "phone_number" => $dataAdmin['phone_number'],
                 ],
                 "verifikasiPenghargaan" => $this->admin->getAllVerifikasiAndPenghargaan(),
                 "verifikasiPenghargaanOv" => $this->admin->getAllVerifikasiAndPenghargaanOv(),
@@ -63,6 +64,10 @@ class AdminController extends Controller
                     ]
                 ],
 
+                "passwordLama" => [
+                    "password" => $this->admin->getPasswordByUserId($_SESSION['user_id'])
+                ],
+
                 "chartAngkatan" => [
                     'labels' => $chartAngkatanPrestasi['labels'],
                     'datasets' => [
@@ -79,7 +84,8 @@ class AdminController extends Controller
                             'data' => $chartTahunVerifikasi['counts']
                         ]
                     ]
-                ]
+                        ]
+
             ];
             $this->view('admin/index', $data);
         } catch (Exception $e) {
@@ -144,6 +150,39 @@ class AdminController extends Controller
                 // Show error message using SweetAlert2
                 echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
                 echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi_prestasi"; }, 3000);</script>';
+            }
+        }
+    }
+    public function changePassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $oldPassword = $_POST['password-lama'];
+                $newPassword = $_POST['password-baru'];
+                $verifPassword = $_POST['password-baru-verif'];
+
+                // Get stored password
+                $storedPassword = $this->admin->getPasswordByUserId($_SESSION['user_id']);
+
+                // Validate old password
+                if ($oldPassword !== $storedPassword) {
+                    throw new Exception("Password lama tidak sesuai");
+                }
+
+                $this->admin->changePasswordByUserId(
+                    $_SESSION['user_id'],
+                    $verifPassword,
+                    $newPassword,
+                    $oldPassword
+                );
+
+                // Redirect with success message
+                header('Location: screen?screen=profile&message=Password berhasil diubah');
+                exit();
+            } catch (Exception $e) {
+                // Redirect with error message
+                header('Location: screen?screen=profile&error=' . urlencode($e->getMessage()));
+                exit();
             }
         }
     }
