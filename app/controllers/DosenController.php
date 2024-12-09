@@ -4,7 +4,7 @@
 require_once 'app/models/Dosen.php';
 require_once 'app/models/Mahasiswa.php';
 
-class DosenController extends Controller
+class DosenController extends Controller 
 {
     private $mahasiswa;
     private $dosen;
@@ -61,6 +61,7 @@ class DosenController extends Controller
                     "password" => $this->dosen->getPasswordByUserId($_SESSION['user_id'])
                 ],
                 "verifikasiPenghargaan" => $this->dosen->getDosenVerifikasiByNIP($dosenData['nip']),
+                "verifikasiProsesPenghargaan" => $this->dosen->getDosenProsesVerifikasiByNIP($dosenData['nip']),
                
 
                 "dosenName" => $this->dosen->getAllDosen(),
@@ -201,6 +202,28 @@ class DosenController extends Controller
                 // Redirect with error message
                 header('Location: screen?screen=profile&error=' . urlencode($e->getMessage()));
                 exit();
+            }
+        }
+    }
+    public function verifikasi()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $verifikasiId = $_POST['pengId'];
+                $status = $_POST['verification_status'] === 'accept' ? 'Terverifikasi' : 'DiTolak';
+                $pesan = $_POST['pesan'];
+
+
+                // Update verification status
+                $result = $this->dosen->updateVerification($verifikasiId, $status, $pesan);
+
+                // Show success message using SweetAlert2
+                echo '<script>alert("Prestasi berhasil diinputkan");</script>';
+                echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi"; }, 10);</script>';
+            } catch (Exception $e) {
+                // Show error message using SweetAlert2
+                echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+                echo '<script>setTimeout(function(){ window.location.href = "screen?screen=verifikasi"; }, 3000);</script>';
             }
         }
     }

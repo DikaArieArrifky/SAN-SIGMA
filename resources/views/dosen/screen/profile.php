@@ -268,7 +268,7 @@
                             <label for="no-telepon">
                                 No. Telepon
                             </label>
-                            <input id="no-telepon" readonly="" type="text" value="<?= htmlspecialchars($data['dosen']['alamat'] ?? '') ?>">
+                            <input id="no-telepon" readonly="" type="text" value="<?= htmlspecialchars($data['dosen']['no_telepon'] ?? '') ?>">
                             <label for="agama">
                                 Agama
                             </label>

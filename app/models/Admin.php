@@ -83,20 +83,23 @@ class Admin extends Model implements IUserApp
     {
         $query = $this->db->prepare("
             SELECT 
-                v.*,
-                p.*,
-                t.nama as tingkatan_nama,
-                d.name as dosen_name,
-                m.name as mahasiswa_name
+            v.*,
+            p.*,
+            t.nama as tingkatan_nama,
+            d.name as dosen_name,
+            m.name as mahasiswa_name,
+            per.nama as peringkat_nama,
+            prod.nama as prodi_nama
 
             FROM verifikasis v
             LEFT JOIN penghargaans p ON v.penghargaan_id = p.id
             LEFT JOIN tingkatans t ON p.tingkat_id = t.id
             LEFT JOIN dosens d ON v.dosen_nip = d.nip
             LEFT JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
+            LEFT JOIN peringkats per ON p.peringkat_id = per.id
+            LEFT JOIN prodis prod ON m.prodi_id = prod.id
              where v.verif_admin !='DiProses' and v.visible_verifikasis = '1'
             ORDER BY v.created_at DESC
-           
         ");
 
         $query->execute();
@@ -311,4 +314,134 @@ ORDER BY year ASC");
 
         return $formatted;
     }
+
+    public function getAll()
+    {
+        $query = $this->db->prepare("
+           SELECT * FROM view_user_admin
+        ORDER BY admin_id ASC
+        ");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Create user
+    public function createUser($name, $username, $password, $role)
+    {
+        try {
+            $query = $this->db->prepare("
+                INSERT INTO users (name, username, password, role)
+                VALUES (:name, :username, :password, :role)
+            ");
+            $query->bindValue(":name", $name);
+            $query->bindValue(":username", $username);
+            $query->bindValue(":password", $password);
+            $query->bindValue(":role", $role);
+            $query->execute();
+            return $this->db->lastInsertId();
+        } catch (Exception $e) {
+            throw new Exception("Error creating user: " . $e->getMessage());
+        }
+    }
+
+    // Create admin
+    public function createAdmin($userId, $name, $gender, $phone_number, $photo)
+    {
+        try {
+            $query = $this->db->prepare("
+                INSERT INTO admins (user_id, name, gender, phone_number, photo)
+                VALUES (:user_id, :name, :gender, :phone_number, :photo)
+            ");
+            $query->bindValue(":user_id", $userId);
+            $query->bindValue(":name", $name);
+            $query->bindValue(":gender", $gender);
+            $query->bindValue(":phone_number", $phone_number);
+            $query->bindValue(":photo", $photo);
+            return $query->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error creating admin: " . $e->getMessage());
+        }
+    }
+
+    // Update user
+    public function updateUser($id, $username, $password)
+    {
+        try {
+            $query = $this->db->prepare("
+                UPDATE users 
+                SET username = :username, password = :password
+                WHERE id = :id
+            ");
+            $query->bindValue(":username", $username);
+            $query->bindValue(":password", $password);
+            $query->bindValue(":id", $id);
+            return $query->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error updating user: " . $e->getMessage());
+        }
+    }
+
+    // Update admin
+    public function updateAdmin($id, $name, $gender, $phone_number, $photo)
+    {
+        try {
+            $query = $this->db->prepare("
+                UPDATE admins 
+                SET name = :name, gender = :gender, phone_number = :phone_number, photo = :photo
+                WHERE id = :id
+            ");
+            $query->bindValue(":name", $name);
+            $query->bindValue(":gender", $gender);
+            $query->bindValue(":phone_number", $phone_number);
+            $query->bindValue(":photo", $photo);
+            $query->bindValue(":id", $id);
+            return $query->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error updating admin: " . $e->getMessage());
+        }
+    }
+
+    // Delete admin (soft delete)
+    public function deleteAdmin($id)
+    {
+        try {
+            $query = $this->db->prepare("
+                UPDATE admins 
+                SET visible_admins = 0
+                WHERE id = :id
+            ");
+            $query->bindValue(":id", $id);
+            return $query->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error deleting admin: " . $e->getMessage());
+        }
+    }
+
+    // Delete user (soft delete)
+    public function deleteUser($id)
+    {
+        try {
+            $query = $this->db->prepare("
+                UPDATE users 
+                SET visible_users = 0
+                WHERE id = :id
+            ");
+            $query->bindValue(":id", $id);
+            return $query->execute();
+        } catch (Exception $e) {
+            throw new Exception("Error deleting user: " . $e->getMessage());
+        }
+    }
+
+
+    public function getAllUsers()
+    {
+        $query = $this->db->prepare("
+            SELECT * FROM users
+            ORDER BY id ASC
+        ");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 }

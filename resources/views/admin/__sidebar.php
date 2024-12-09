@@ -45,13 +45,17 @@
                 <i class="bi bi-building"></i>
                 <span class="ml-3">Kelola Prodi</span>
             </button>
-            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_tingakatan" name="screen">
+            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_tingkatan" name="screen">
                 <i class="bi bi-layers"></i>
                 <span class="ml-3">Kelola Tingkatan</span>
             </button>
             <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_peringkat" name="screen">
                 <i class="bi bi-award-fill"></i>
                 <span class="ml-3">Kelola Peringkat</span>
+            </button>
+            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="tampilkan_semua_user" name="screen">
+                <i class="fas fa-users"></i>
+                <span class="ml-3">Tampilkan User</span>
             </button>
             <hr>
             <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="profile" name="screen">
@@ -80,9 +84,10 @@
         });
     </script>
 </div>
-<div class="bg-gray-900 text-white w-[20rem] flex flex-col h-screen transition-all duration-300 sidebar-expanded" id="sidebar-close">
-    <div class="flex items-center justify-center h-24 border-b border-gray-800">
-        <img src="<?= IMG; ?>logo_sigma.png" alt="San Sigma Logo" class="h-14">
+
+<div class="bg-gray-900 text-white w-28 flex flex-col h-screen transition-all duration-300 sidebar-minimized" id="sidebar-close">
+    <div class="flex items-center justify-center h-20 border-b border-gray-800">
+        <img src="<?= IMG; ?>logo_sigma.png" alt="San Sigma Logo" class="h-12">
     </div>
     <form action="screen" method="get">
         <nav class="flex-1 px-2 py-4 flex flex-col items-center" id="nav-close">
@@ -108,11 +113,14 @@
             <button type="submit" value="kelola_prodi" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-building"></i>
             </button>
-            <button type="submit" value="kelola_tingakatan" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
+            <button type="submit" value="kelola_tingkatan" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-layers"></i>
             </button>
             <button type="submit" value="kelola_peringkat" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-award-fill"></i>
+            </button>
+            <button type="submit" value="tamplikan_semua_user" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
+            <i class="bi bi-user"></i>
             </button>
             <hr>
             <button type="submit" value="profile" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
