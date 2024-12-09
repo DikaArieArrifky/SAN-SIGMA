@@ -48,6 +48,7 @@ class AdminController extends Controller
             $prodis = $this->prodi->getAll();
             $tingkatans = $this->tingkatan->getAll();
             $peringkats = $this->peringkat->getAll();
+            $adminCRUD = $this->admin->getAll();
 
             if (!$dataAdmin) {
                 throw new Exception("Admin not found");
@@ -66,7 +67,6 @@ class AdminController extends Controller
                 "countAllPenghargaan" => $this->admin->getCountAllPenghargaan(),
                 "countAllVerifiedPenghargaan" => $this->admin->getAllCountVerifiedPenghargaan(),
                 "countAllNotVerifiedPenghargaan" => $this->admin->getAllCountNotVerifiedPenghargaan(),
-
 
                 "chartTingakatan" => [
                     'labels' => $chartTingakatanPrestasi['labels'],
@@ -97,7 +97,9 @@ class AdminController extends Controller
                 ],
                 "prodis" => $prodis,
                 "tingkatans" => $tingkatans,
-                "peringkats" => $peringkats
+                "peringkats" => $peringkats,
+                "admins" => $adminCRUD
+
 
 
             ];
@@ -363,11 +365,11 @@ class AdminController extends Controller
             $spreadsheet = new Spreadsheet();
             $sheet = $spreadsheet->getActiveSheet();
 
-            
+
             // Set column headers
             $headers = [
                 'A' => 'Nama Mahasiswa',
-                'B' => 'Tanggal Lomba', 
+                'B' => 'Tanggal Lomba',
                 'C' => 'Judul Lomba',
                 'D' => 'Tingkatan',
                 'E' => 'Verifikasi Admin',
@@ -414,7 +416,7 @@ class AdminController extends Controller
             foreach ($verifikasiPenghargaanOv as $verifikasi) {
                 $data = [
                     $verifikasi['mahasiswa_name'] ?? '-',
-                    $verifikasi['tanggal_mulai'] ?? '-', 
+                    $verifikasi['tanggal_mulai'] ?? '-',
                     $verifikasi['judul'] ?? '-',
                     $verifikasi['tingkatan_nama'] ?? '-',
                     $verifikasi['verif_admin'] ?? '-',
@@ -422,7 +424,7 @@ class AdminController extends Controller
                     $verifikasi['prodi_nama'] ?? '-',
                     $verifikasi['peringkat_nama'] ?? '-'
                 ];
-                
+
                 $sheet->fromArray([$data], null, 'A' . $row);
                 $row++;
             }
@@ -448,6 +450,95 @@ class AdminController extends Controller
         } catch (Exception $e) {
             echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
             echo '<script>setTimeout(function(){ window.location.href = "screen?screen=riwayat"; }, 10);</script>';
+        }
+    }
+
+    public function kelola_admin()
+    {
+        try {
+            $admins = $this->admin->getAll();
+            $data = [
+                "screen" => "kelola_admin",
+                "title" => "Kelola Admin",
+                "admins" => $admins
+            ];
+            $this->view('admin/kelola_admin', $data);
+        } catch (Exception $e) {
+            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
+        }
+    }
+
+    public function createAdmin()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $name = $_POST['name'];
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $gender = $_POST['gender'];
+                $phone_number = $_POST['phone_number'];
+                $photo = $_POST['photo'];
+
+                // Create user first
+                $userId = $this->admin->createUser($name, $username, $password, 'admin');
+
+                // Create admin with the user_id
+                $this->admin->createAdmin($userId, $name, $gender, $phone_number, $photo);
+
+                echo json_encode(['success' => true, 'message' => 'Admin berhasil ditambahkan']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function updateAdmin()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $admin_id = $_POST['admin_id'];
+                $userId = $_POST['user_id'];
+                $name = $_POST['name'];
+                $username = $_POST['username'];
+                $password = $_POST['password'];
+                $gender = $_POST['gender'];
+                $phone_number = $_POST['phone_number'];
+                $photo = $_POST['photo'];
+
+                // Update user first
+                $this->admin->updateUser($userId, $username, $password);
+
+                // Update admin
+                $this->admin->updateAdmin($admin_id, $name, $gender, $phone_number, $photo);
+
+                echo json_encode(['success' => true, 'message' => 'Admin berhasil diupdate']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function deleteAdmin()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $id = $_POST['admin_id'];
+                $userId = $_POST['user_id'];
+
+                // Delete admin
+                $this->admin->deleteAdmin($id);
+
+                // Delete user
+                $this->admin->deleteUser($userId);
+
+                echo json_encode(['success' => true, 'message' => 'Admin berhasil dihapus']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
         }
     }
 }
