@@ -70,6 +70,7 @@ class AdminController extends Controller
                     "id" => $dataAdmin['id'],
                     "photo" => $dataAdmin['photo'],
                     "phone_number" => $dataAdmin['phone_number'],
+                    "gender" => $dataAdmin['gender'],
                 ],
                 "verifikasiPenghargaan" => $this->admin->getAllVerifikasiAndPenghargaan(),
                 "verifikasiPenghargaanOv" => $this->admin->getAllVerifikasiAndPenghargaanOv(),
@@ -622,13 +623,13 @@ class AdminController extends Controller
                 $prodi_id = $_POST['prodi_id'];
                 $college_year = $_POST['college_year'];
                 $status = $_POST['status'];
-    
+
                 // Update user first
                 $this->mahasiswa->updateUser($userId, $nim, $nim);
-    
+
                 // Update mahasiswa
                 $this->mahasiswa->updateMahasiswa($nim, $name, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $college_year, $status);
-    
+
                 echo json_encode(['success' => true, 'message' => 'Mahasiswa berhasil diupdate']);
             } catch (Exception $e) {
                 http_response_code(500);
@@ -643,13 +644,13 @@ class AdminController extends Controller
             try {
                 $nim = $_POST['mahasiswa_id']; // Use nim as the identifier
                 $userId = $_POST['user_id'];
-    
+
                 // Delete mahasiswa
                 $this->mahasiswa->deleteMahasiswa($nim);
-    
+
                 // Delete user
                 $this->mahasiswa->deleteUser($userId);
-    
+
                 echo json_encode(['success' => true, 'message' => 'Mahasiswa berhasil dihapus']);
             } catch (Exception $e) {
                 http_response_code(500);
@@ -660,100 +661,133 @@ class AdminController extends Controller
 
 
     public function kelola_dosen()
-{
-    try {
-        $dosens = $this->dosen->getAll();
-        $data = [
-            "screen" => "kelola_dosen",
-            "title" => "Kelola Dosen",
-            "dosens" => $dosens
-        ];
-        $this->view('admin/kelola_dosen', $data);
-    } catch (Exception $e) {
-        echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
-        echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
-    }
-}
-
-public function createDosen()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    {
         try {
-            $name = $_POST['name'];
-            $nip = $_POST['nip'];
-            $gender = $_POST['gender'];
-            $phone_number = $_POST['phone_number'];
-            $photo = $_POST['photo'];
-            $alamat = $_POST['alamat'];
-            $kota = $_POST['kota'];
-            $provinsi = $_POST['provinsi'];
-            $agama = $_POST['agama'];
-            $prodi_id = $_POST['prodi_id'];
-            $status = $_POST['status'];
-
-            // Create user first
-            $userId = $this->dosen->createUser($name, $nip, $nip, 'dosen');
-
-            // Create dosen with the user_id
-            $this->dosen->createDosen($userId, $name, $nip, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $status);
-
-            echo json_encode(['success' => true, 'message' => 'Dosen berhasil ditambahkan']);
+            $dosens = $this->dosen->getAll();
+            $data = [
+                "screen" => "kelola_dosen",
+                "title" => "Kelola Dosen",
+                "dosens" => $dosens
+            ];
+            $this->view('admin/kelola_dosen', $data);
         } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
         }
     }
-}
 
-public function updateDosen()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        try {
-            $nip = $_POST['nip'];
-            $userId = $_POST['user_id'];
-            $name = $_POST['name'];
-            $gender = $_POST['gender'];
-            $phone_number = $_POST['phone_number'];
-            $photo = $_POST['photo'];
-            $alamat = $_POST['alamat'];
-            $kota = $_POST['kota'];
-            $provinsi = $_POST['provinsi'];
-            $agama = $_POST['agama'];
-            $prodi_id = $_POST['prodi_id'];
-            $status = $_POST['status'];
+    public function createDosen()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $name = $_POST['name'];
+                $nip = $_POST['nip'];
+                $gender = $_POST['gender'];
+                $phone_number = $_POST['phone_number'];
+                $photo = $_POST['photo'];
+                $alamat = $_POST['alamat'];
+                $kota = $_POST['kota'];
+                $provinsi = $_POST['provinsi'];
+                $agama = $_POST['agama'];
+                $prodi_id = $_POST['prodi_id'];
+                $status = $_POST['status'];
 
-            // Update user first
-            $this->dosen->updateUser($userId, $nip, $nip);
+                // Create user first
+                $userId = $this->dosen->createUser($name, $nip, $nip, 'dosen');
 
-            // Update dosen
-            $this->dosen->updateDosen($nip, $name, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $status);
+                // Create dosen with the user_id
+                $this->dosen->createDosen($userId, $name, $nip, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $status);
 
-            echo json_encode(['success' => true, 'message' => 'Dosen berhasil diupdate']);
-        } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                echo json_encode(['success' => true, 'message' => 'Dosen berhasil ditambahkan']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
         }
     }
-}
 
-public function deleteDosen()
-{
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        try {
-            $nip = $_POST['nip'];
-            $userId = $_POST['user_id'];
+    public function updateDosen()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $nip = $_POST['nip'];
+                $userId = $_POST['user_id'];
+                $name = $_POST['name'];
+                $gender = $_POST['gender'];
+                $phone_number = $_POST['phone_number'];
+                $photo = $_POST['photo'];
+                $alamat = $_POST['alamat'];
+                $kota = $_POST['kota'];
+                $provinsi = $_POST['provinsi'];
+                $agama = $_POST['agama'];
+                $prodi_id = $_POST['prodi_id'];
+                $status = $_POST['status'];
 
-            // Delete dosen
-            $this->dosen->deleteDosen($nip);
+                // Update user first
+                $this->dosen->updateUser($userId, $nip, $nip);
 
-            // Delete user
-            $this->dosen->deleteUser($userId);
+                // Update dosen
+                $this->dosen->updateDosen($nip, $name, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $status);
 
-            echo json_encode(['success' => true, 'message' => 'Dosen berhasil dihapus']);
-        } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                echo json_encode(['success' => true, 'message' => 'Dosen berhasil diupdate']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
         }
     }
-}
+
+    public function deleteDosen()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $nip = $_POST['nip'];
+                $userId = $_POST['user_id'];
+
+                // Delete dosen
+                $this->dosen->deleteDosen($nip);
+
+                // Delete user
+                $this->dosen->deleteUser($userId);
+
+                echo json_encode(['success' => true, 'message' => 'Dosen berhasil dihapus']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+    public function changePassword()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $oldPassword = $_POST['password-lama'];
+                $newPassword = $_POST['password-baru'];
+                $verifPassword = $_POST['password-baru-verif'];
+
+                // Get stored password
+                $storedPassword = $this->dosen->getPasswordByUserId($_SESSION['user_id']);
+
+                // Validate old password
+                if ($oldPassword !== $storedPassword) {
+                    throw new Exception("Password lama tidak sesuai");
+                }
+
+                $this->dosen->changePasswordByUserId(
+                    $_SESSION['user_id'],
+                    $verifPassword,
+                    $newPassword,
+                    $oldPassword
+                );
+
+                // Redirect with success message
+                header('Location: screen?screen=profile&message=Password berhasil diubah');
+                exit();
+            } catch (Exception $e) {
+                // Redirect with error message
+                header('Location: screen?screen=profile&error=' . urlencode($e->getMessage()));
+                exit();
+            }
+        }
+    }
 }

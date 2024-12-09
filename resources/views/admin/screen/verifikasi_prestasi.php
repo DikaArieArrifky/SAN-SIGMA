@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= CSS; ?>/admin.css">
 <body>
 
     <div class="table-container">
