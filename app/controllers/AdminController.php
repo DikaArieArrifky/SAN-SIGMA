@@ -18,6 +18,7 @@ class AdminController extends Controller
     private $prodi;
     private $tingkatan;
     private $peringkat;
+    private $mahasiswa;
 
 
 
@@ -27,6 +28,7 @@ class AdminController extends Controller
         $this->prodi = new Prodi(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->tingkatan = new Tingkatan(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->peringkat = new Peringkat(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+        $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index($screen = "dashboard")
@@ -49,6 +51,7 @@ class AdminController extends Controller
             $tingkatans = $this->tingkatan->getAll();
             $peringkats = $this->peringkat->getAll();
             $adminCRUD = $this->admin->getAll();
+            $mahasiswaCRUD = $this->mahasiswa->getAll();
 
             if (!$dataAdmin) {
                 throw new Exception("Admin not found");
@@ -98,7 +101,8 @@ class AdminController extends Controller
                 "prodis" => $prodis,
                 "tingkatans" => $tingkatans,
                 "peringkats" => $peringkats,
-                "admins" => $adminCRUD
+                "admins" => $adminCRUD,
+                "mahasiswas" => $mahasiswaCRUD
 
 
 
@@ -535,6 +539,105 @@ class AdminController extends Controller
                 $this->admin->deleteUser($userId);
 
                 echo json_encode(['success' => true, 'message' => 'Admin berhasil dihapus']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+    public function kelola_mahasiswa()
+    {
+        try {
+            $mahasiswas = $this->mahasiswa->getAll();
+            $data = [
+                "screen" => "kelola_mahasiswa",
+                "title" => "Kelola Mahasiswa",
+                "mahasiswas" => $mahasiswas
+            ];
+            $this->view('admin/kelola_mahasiswa', $data);
+        } catch (Exception $e) {
+            echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+            echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
+        }
+    }
+
+    public function createMahasiswa()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $name = $_POST['name'];
+                $nim = $_POST['nim'];
+                $gender = $_POST['gender'];
+                $phone_number = $_POST['phone_number'];
+                $photo = $_POST['photo'];
+                $alamat = $_POST['alamat'];
+                $kota = $_POST['kota'];
+                $provinsi = $_POST['provinsi'];
+                $agama = $_POST['agama'];
+                $prodi_id = $_POST['prodi_id'];
+                $college_year = $_POST['college_year'];
+                $status = $_POST['status'];
+
+                // Create user first
+                $userId = $this->mahasiswa->createUser($name, $nim, $nim, 'mahasiswa');
+
+                // Create mahasiswa with the user_id
+                $this->mahasiswa->createMahasiswa($userId, $name, $nim, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $college_year, $status);
+
+                echo json_encode(['success' => true, 'message' => 'Mahasiswa berhasil ditambahkan']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function updateMahasiswa()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $nim = $_POST['nim'];
+                $userId = $_POST['user_id'];
+                $name = $_POST['name'];
+                $gender = $_POST['gender'];
+                $phone_number = $_POST['phone_number'];
+                $photo = $_POST['photo'];
+                $alamat = $_POST['alamat'];
+                $kota = $_POST['kota'];
+                $provinsi = $_POST['provinsi'];
+                $agama = $_POST['agama'];
+                $prodi_id = $_POST['prodi_id'];
+                $college_year = $_POST['college_year'];
+                $status = $_POST['status'];
+    
+                // Update user first
+                $this->mahasiswa->updateUser($userId, $nim, $nim);
+    
+                // Update mahasiswa
+                $this->mahasiswa->updateMahasiswa($nim, $name, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $college_year, $status);
+    
+                echo json_encode(['success' => true, 'message' => 'Mahasiswa berhasil diupdate']);
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        }
+    }
+
+    public function deleteMahasiswa()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            try {
+                $nim = $_POST['mahasiswa_id']; // Use nim as the identifier
+                $userId = $_POST['user_id'];
+    
+                // Delete mahasiswa
+                $this->mahasiswa->deleteMahasiswa($nim);
+    
+                // Delete user
+                $this->mahasiswa->deleteUser($userId);
+    
+                echo json_encode(['success' => true, 'message' => 'Mahasiswa berhasil dihapus']);
             } catch (Exception $e) {
                 http_response_code(500);
                 echo json_encode(['success' => false, 'message' => $e->getMessage()]);

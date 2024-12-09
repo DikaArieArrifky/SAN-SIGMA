@@ -1,51 +1,57 @@
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Daftar Admin</h6>
-            <button class="btn btn-primary" data-toggle="modal" data-target="#addAdminModal">
-                <i class="fas fa-plus"></i> Tambah Admin
+            <h6 class="m-0 font-weight-bold text-primary">Daftar Mahasiswa</h6>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addMahasiswaModal">
+                <i class="fas fa-plus"></i> Tambah Mahasiswa
             </button>
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari Admin...">
+                <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari Mahasiswa...">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Admin</th>
-                            <th>Username</th>
+                            <th>Nama Mahasiswa</th>
+                            <th>NIM</th>
                             <th>Gender</th>
                             <th>Phone Number</th>
                             <th>Photo</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody id="adminTableBody">
-                        <?php foreach ($data['admins'] as $index => $admin): ?>
+                    <tbody id="mahasiswaTableBody">
+                        <?php foreach ($data['mahasiswas'] as $index => $mahasiswa): ?>
                             <tr>
                                 <td><?= $index + 1 ?></td>
-                                <td class="editable" data-admin_id="<?= $admin['admin_id'] ?>"><?= htmlspecialchars($admin['name']) ?></td>
-                                <td><?= htmlspecialchars($admin['username']) ?></td>
-                                <td><?= htmlspecialchars($admin['gender']) ?></td>
-                                <td><?= htmlspecialchars($admin['phone_number']) ?></td>
-                                <td><img src="<?= IMG . '/person/' . htmlspecialchars($admin['photo']) ?>" alt="Photo" width="50"></td>
+                                <td class="editable" data-id="<?= $mahasiswa['nim'] ?>"><?= htmlspecialchars($mahasiswa['name']) ?></td>
+                                <td><?= htmlspecialchars($mahasiswa['nim']) ?></td>
+                                <td><?= htmlspecialchars($mahasiswa['gender']) ?></td>
+                                <td><?= htmlspecialchars($mahasiswa['phone_number']) ?></td>
+                                <td><img src="<?= IMG . '/person/' . htmlspecialchars($mahasiswa['photo']) ?>" alt="Photo" width="50"></td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning edit-admin"
-                                        data-admin_id="<?= $admin['admin_id'] ?>"
-                                        data-user_id="<?= $admin['user_id'] ?>"
-                                        data-name="<?= htmlspecialchars($admin['name']) ?>"
-                                        data-username="<?= htmlspecialchars($admin['username']) ?>"
-                                        data-password="<?= htmlspecialchars($admin['password']) ?>"
-                                        data-gender="<?= htmlspecialchars($admin['gender']) ?>"
-                                        data-phone_number="<?= htmlspecialchars($admin['phone_number']) ?>"
-                                        data-photo="<?= htmlspecialchars($admin['photo']) ?>"
-                                        data-toggle="modal" data-target="#editAdminModal">
+                                    <button class="btn btn-sm btn-warning edit-mahasiswa"
+                                        data-id="<?= $mahasiswa['nim'] ?>"
+                                        data-user_id="<?= $mahasiswa['user_id'] ?>"
+                                        data-name="<?= htmlspecialchars($mahasiswa['name']) ?>"
+                                        data-nim="<?= htmlspecialchars($mahasiswa['nim']) ?>"
+                                        data-gender="<?= htmlspecialchars($mahasiswa['gender']) ?>"
+                                        data-phone_number="<?= htmlspecialchars($mahasiswa['phone_number']) ?>"
+                                        data-photo="<?= htmlspecialchars($mahasiswa['photo']) ?>"
+                                        data-alamat="<?= htmlspecialchars($mahasiswa['Alamat']) ?>"
+                                        data-kota="<?= htmlspecialchars($mahasiswa['Kota']) ?>"
+                                        data-provinsi="<?= htmlspecialchars($mahasiswa['Provinsi']) ?>"
+                                        data-agama="<?= htmlspecialchars($mahasiswa['agama']) ?>"
+                                        data-prodi_id="<?= htmlspecialchars($mahasiswa['prodi_id']) ?>"
+                                        data-college_year="<?= htmlspecialchars($mahasiswa['college_year']) ?>"
+                                        data-status="<?= htmlspecialchars($mahasiswa['status']) ?>"
+                                        data-toggle="modal" data-target="#editMahasiswaModal">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-danger delete-admin"
-                                        data-admin_id="<?= $admin['admin_id'] ?>"
-                                        data-user_id="<?= $admin['user_id'] ?>">
+                                    <button class="btn btn-sm btn-danger delete-mahasiswa"
+                                        data-id="<?= $mahasiswa['nim'] ?>"
+                                        data-user_id="<?= $mahasiswa['user_id'] ?>">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </td>
@@ -62,28 +68,26 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="addAdminModal" tabindex="-1" role="dialog">
+
+<!-- Add Mahasiswa Modal -->
+<div class="modal fade" id="addMahasiswaModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Tambah Admin</h5>
+                <h5 class="modal-title">Tambah Mahasiswa</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="addAdminForm">
+            <form id="addMahasiswaForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Nama Admin</label>
+                        <label>Nama Mahasiswa</label>
                         <input type="text" class="form-control modal-input" name="name" required>
                     </div>
                     <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" class="form-control modal-input" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="text" class="form-control modal-input" name="password" required>
+                        <label>NIM</label>
+                        <input type="text" class="form-control modal-input" name="nim" required>
                     </div>
                     <div class="form-group">
                         <label>Gender</label>
@@ -100,6 +104,41 @@
                         <label>Photo</label>
                         <input type="text" class="form-control modal-input" name="photo" required>
                     </div>
+                    <div class="form-group">
+                        <label>Alamat</label>
+                        <input type="text" class="form-control modal-input" name="alamat" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kota</label>
+                        <input type="text" class="form-control modal-input" name="kota" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Provinsi</label>
+                        <input type="text" class="form-control modal-input" name="provinsi" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Agama</label>
+                        <input type="text" class="form-control modal-input" name="agama" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Prodi</label>
+                        <select class="form-control modal-input" name="prodi_id" required>
+                            <?php foreach ($data['prodis'] as $prodi): ?>
+                                <option value="<?= $prodi['id'] ?>"><?= htmlspecialchars($prodi['nama']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tahun Masuk</label>
+                        <input type="number" class="form-control modal-input" name="college_year" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control modal-input" name="status" required>
+                            <option value="aktif">Aktif</option>
+                            <option value="tidak aktif">Tidak Aktif</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -110,32 +149,28 @@
     </div>
 </div>
 
-<!-- Edit Admin Modal -->
-<div class="modal fade" id="editAdminModal" tabindex="-1" role="dialog">
+<!-- Edit Mahasiswa Modal -->
+<div class="modal fade" id="editMahasiswaModal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Edit Admin</h5>
+                <h5 class="modal-title">Edit Mahasiswa</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="editAdminForm">
-                <input type="hidden" name="admin_id">
+            <form id="editMahasiswaForm">
+                <input type="hidden" name="mahasiswa_id">
                 <input type="hidden" name="user_id">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Nama Admin</label>
+                        <label>Nama Mahasiswa</label>
                         <input type="text" class="form-control modal-input" name="name" required>
                     </div>
                     <div class="form-group">
-                        <label>Username</label>
-                        <input type="text" class="form-control modal-input" name="username" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="text" class="form-control modal-input" name="password" required>
-                    </div>
+                        <label>NIM</label>
+                        <input type="text" class="form-control modal-input" name="nim" required readonly>
+                    </div> 
                     <div class="form-group">
                         <label>Gender</label>
                         <select class="form-control modal-input" name="gender" required>
@@ -151,6 +186,41 @@
                         <label>Photo</label>
                         <input type="text" class="form-control modal-input" name="photo" required>
                     </div>
+                    <div class="form-group">
+                        <label>Alamat</label>
+                        <input type="text" class="form-control modal-input" name="alamat" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Kota</label>
+                        <input type="text" class="form-control modal-input" name="kota" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Provinsi</label>
+                        <input type="text" class="form-control modal-input" name="provinsi" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Agama</label>
+                        <input type="text" class="form-control modal-input" name="agama" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Prodi</label>
+                        <select class="form-control modal-input" name="prodi_id" required>
+                            <?php foreach ($data['prodis'] as $prodi): ?>
+                                <option value="<?= $prodi['id'] ?>"><?= htmlspecialchars($prodi['nama']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tahun Masuk</label>
+                        <input type="number" class="form-control modal-input" name="college_year" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select class="form-control modal-input" name="status" required>
+                            <option value="aktif">Aktif</option>
+                            <option value="tidak aktif">Tidak Aktif</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -161,23 +231,13 @@
     </div>
 </div>
 
-<style>
-    .modal-input {
-        font-size: 1.5rem;
-        height: fit-content;
-    }
-
-    
-</style>
-
-
 <script>
     $(document).ready(function() {
-        // Add Admin
-        $('#addAdminForm').on('submit', function(e) {
+        // Add Mahasiswa
+        $('#addMahasiswaForm').on('submit', function(e) {
             e.preventDefault();
             $.ajax({
-                url: 'createAdmin',
+                url: 'createMahasiswa',
                 type: 'POST',
                 data: $(this).serialize(),
                 success: function(response) {
@@ -210,31 +270,43 @@
             });
         });
 
-        // Edit Admin
-        $(document).on('click', '.edit-admin', function() {
-            const admin_id = $(this).data('admin_id');
+        // Edit Mahasiswa
+        $(document).on('click', '.edit-mahasiswa', function() {
+            const id = $(this).data('nim');
             const user_id = $(this).data('user_id');
             const name = $(this).data('name');
-            const username = $(this).data('username');
-            const password = $(this).data('password');
+            const nim = $(this).data('nim');
             const gender = $(this).data('gender');
             const phone_number = $(this).data('phone_number');
             const photo = $(this).data('photo');
-            $('#editAdminForm [name=admin_id]').val(admin_id);
-            $('#editAdminForm [name=user_id]').val(user_id);
-            $('#editAdminForm [name=name]').val(name);
-            $('#editAdminForm [name=username]').val(username);
-            $('#editAdminForm [name=password]').val(password);
-            $('#editAdminForm [name=gender]').val(gender);
-            $('#editAdminForm [name=phone_number]').val(phone_number);
-            $('#editAdminForm [name=photo]').val(photo);
-            $('#editAdminModal').modal('show');
+            const alamat = $(this).data('alamat');
+            const kota = $(this).data('kota');
+            const provinsi = $(this).data('provinsi');
+            const agama = $(this).data('agama');
+            const prodi_id = $(this).data('prodi_id');
+            const college_year = $(this).data('college_year');
+            const status = $(this).data('status');
+          
+            $('#editMahasiswaForm [name=name]').val(name);
+            $('#editMahasiswaForm [name=user_id]').val(user_id);
+            $('#editMahasiswaForm [name=nim]').val(nim);
+            $('#editMahasiswaForm [name=gender]').val(gender);
+            $('#editMahasiswaForm [name=phone_number]').val(phone_number);
+            $('#editMahasiswaForm [name=photo]').val(photo);
+            $('#editMahasiswaForm [name=alamat]').val(alamat);
+            $('#editMahasiswaForm [name=kota]').val(kota);
+            $('#editMahasiswaForm [name=provinsi]').val(provinsi);
+            $('#editMahasiswaForm [name=agama]').val(agama);
+            $('#editMahasiswaForm [name=prodi_id]').val(prodi_id);
+            $('#editMahasiswaForm [name=college_year]').val(college_year);
+            $('#editMahasiswaForm [name=status]').val(status);
+            $('#editMahasiswaModal').modal('show');
         });
 
-        $('#editAdminForm').on('submit', function(e) {
+        $('#editMahasiswaForm').on('submit', function(e) {
             e.preventDefault();
             $.ajax({
-                url: 'updateAdmin',
+                url: 'updateMahasiswa',
                 type: 'POST',
                 data: $(this).serialize(),
                 success: function(response) {
@@ -267,13 +339,15 @@
             });
         });
 
-        // Delete Admin
-        $('.delete-admin').click(function() {
-            const admin_id = $(this).data('admin_id');
+        // Delete Mahasiswa
+        $(document).ready(function() {
+        // Delete Mahasiswa
+        $('.delete-mahasiswa').click(function() {
+            const nim = $(this).data('id'); // Use nim as the identifier
             const user_id = $(this).data('user_id');
             Swal.fire({
                 title: 'Apakah anda yakin?',
-                text: "Data admin akan dihapus",
+                text: "Data mahasiswa akan dihapus",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -283,10 +357,10 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: 'deleteAdmin',
+                        url: 'deleteMahasiswa',
                         type: 'POST',
                         data: {
-                            admin_id: admin_id,
+                            mahasiswa_id: nim, // Use nim as the identifier
                             user_id: user_id
                         },
                         success: function(response) {
@@ -320,11 +394,12 @@
                 }
             });
         });
+    });
 
         // Search Functionality
         $('#searchInput').on('keyup', function() {
             const value = $(this).val().toLowerCase();
-            $('#adminTableBody tr').filter(function() {
+            $('#mahasiswaTableBody tr').filter(function() {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
             });
         });
@@ -345,6 +420,7 @@
 <style>
     body {
         font-size: 1.2rem;
+        height: fit-content;
         /* Increase the base font size */
     }
 
@@ -358,5 +434,9 @@
     .table td {
         font-size: 1.3rem;
         /* Keep the original font size for table headers and data */
+    }
+    .modal-input {
+        font-size: 1.5rem;
+        height: fit-content;
     }
 </style>
