@@ -56,6 +56,7 @@ class AdminController extends Controller
             $adminCRUD = $this->admin->getAll();
             $mahasiswaCRUD = $this->mahasiswa->getAll();
             $dosenCRUD = $this->dosen->getAll();
+            $users = $this->admin->getAllUsers();
 
             if (!$dataAdmin) {
                 throw new Exception("Admin not found");
@@ -107,7 +108,8 @@ class AdminController extends Controller
                 "peringkats" => $peringkats,
                 "admins" => $adminCRUD,
                 "mahasiswas" => $mahasiswaCRUD,
-                "dosens" => $dosenCRUD
+                "dosens" => $dosenCRUD,
+                "users" => $users
 
 
 

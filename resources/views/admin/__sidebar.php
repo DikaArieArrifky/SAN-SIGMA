@@ -53,6 +53,10 @@
                 <i class="bi bi-award-fill"></i>
                 <span class="ml-3">Kelola Peringkat</span>
             </button>
+            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="tampilkan_semua_user" name="screen">
+                <i class="fas fa-users"></i>
+                <span class="ml-3">Tampilkan User</span>
+            </button>
             <hr>
             <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="profile" name="screen">
                 <i class="fas fa-user"></i>
@@ -114,6 +118,9 @@
             </button>
             <button type="submit" value="kelola_peringkat" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-award-fill"></i>
+            </button>
+            <button type="submit" value="tamplikan_semua_user" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
+            <i class="bi bi-user"></i>
             </button>
             <hr>
             <button type="submit" value="profile" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">

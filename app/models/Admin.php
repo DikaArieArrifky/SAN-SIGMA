@@ -433,5 +433,15 @@ ORDER BY year ASC");
         }
     }
 
+
+    public function getAllUsers()
+    {
+        $query = $this->db->prepare("
+            SELECT * FROM users
+            ORDER BY id ASC
+        ");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
     
 }
