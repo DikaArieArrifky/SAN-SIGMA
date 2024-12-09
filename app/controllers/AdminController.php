@@ -7,6 +7,7 @@ require_once 'app/models/Admin.php';
 require_once 'app/models/Prodi.php';
 require_once 'app/models/Tingkatan.php';
 require_once 'app/models/Peringkat.php';
+require_once 'app/models/Dosen.php';
 require 'vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -19,6 +20,7 @@ class AdminController extends Controller
     private $tingkatan;
     private $peringkat;
     private $mahasiswa;
+    private $dosen;
 
 
 
@@ -29,6 +31,7 @@ class AdminController extends Controller
         $this->tingkatan = new Tingkatan(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->peringkat = new Peringkat(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+        $this->dosen = new Dosen(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index($screen = "dashboard")
@@ -52,6 +55,7 @@ class AdminController extends Controller
             $peringkats = $this->peringkat->getAll();
             $adminCRUD = $this->admin->getAll();
             $mahasiswaCRUD = $this->mahasiswa->getAll();
+            $dosenCRUD = $this->dosen->getAll();
 
             if (!$dataAdmin) {
                 throw new Exception("Admin not found");
@@ -102,7 +106,9 @@ class AdminController extends Controller
                 "tingkatans" => $tingkatans,
                 "peringkats" => $peringkats,
                 "admins" => $adminCRUD,
-                "mahasiswas" => $mahasiswaCRUD
+                "mahasiswas" => $mahasiswaCRUD,
+                "dosens" => $dosenCRUD
+
 
 
 
@@ -644,4 +650,103 @@ class AdminController extends Controller
             }
         }
     }
+
+
+    public function kelola_dosen()
+{
+    try {
+        $dosens = $this->dosen->getAll();
+        $data = [
+            "screen" => "kelola_dosen",
+            "title" => "Kelola Dosen",
+            "dosens" => $dosens
+        ];
+        $this->view('admin/kelola_dosen', $data);
+    } catch (Exception $e) {
+        echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+        echo '<script>setTimeout(function(){ window.location.href = "screen?screen=dashboard"; }, 10);</script>';
+    }
+}
+
+public function createDosen()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            $name = $_POST['name'];
+            $nip = $_POST['nip'];
+            $gender = $_POST['gender'];
+            $phone_number = $_POST['phone_number'];
+            $photo = $_POST['photo'];
+            $alamat = $_POST['alamat'];
+            $kota = $_POST['kota'];
+            $provinsi = $_POST['provinsi'];
+            $agama = $_POST['agama'];
+            $prodi_id = $_POST['prodi_id'];
+            $status = $_POST['status'];
+
+            // Create user first
+            $userId = $this->dosen->createUser($name, $nip, $nip, 'dosen');
+
+            // Create dosen with the user_id
+            $this->dosen->createDosen($userId, $name, $nip, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $status);
+
+            echo json_encode(['success' => true, 'message' => 'Dosen berhasil ditambahkan']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+}
+
+public function updateDosen()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            $nip = $_POST['nip'];
+            $userId = $_POST['user_id'];
+            $name = $_POST['name'];
+            $gender = $_POST['gender'];
+            $phone_number = $_POST['phone_number'];
+            $photo = $_POST['photo'];
+            $alamat = $_POST['alamat'];
+            $kota = $_POST['kota'];
+            $provinsi = $_POST['provinsi'];
+            $agama = $_POST['agama'];
+            $prodi_id = $_POST['prodi_id'];
+            $status = $_POST['status'];
+
+            // Update user first
+            $this->dosen->updateUser($userId, $nip, $nip);
+
+            // Update dosen
+            $this->dosen->updateDosen($nip, $name, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $status);
+
+            echo json_encode(['success' => true, 'message' => 'Dosen berhasil diupdate']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+}
+
+public function deleteDosen()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        try {
+            $nip = $_POST['nip'];
+            $userId = $_POST['user_id'];
+
+            // Delete dosen
+            $this->dosen->deleteDosen($nip);
+
+            // Delete user
+            $this->dosen->deleteUser($userId);
+
+            echo json_encode(['success' => true, 'message' => 'Dosen berhasil dihapus']);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        }
+    }
+}
 }
