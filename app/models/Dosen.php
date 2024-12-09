@@ -14,5 +14,18 @@ class Dosen extends Model {
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+        
+    public function getProdiDosen()
+    {
+        $sql = "SELECT d.name, p.nama AS jurusan, d.score 
+                FROM dosens d
+                INNER JOIN prodis p ON d.prodi_id = p.id
+                ORDER BY d.score DESC";
+    
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 
 }
