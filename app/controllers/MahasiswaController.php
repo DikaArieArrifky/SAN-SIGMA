@@ -53,7 +53,8 @@ class MahasiswaController extends Controller
                     "prodi_id" => $mahasiswaData['prodi_id'],   
                     "provinsi" => $mahasiswaData['Provinsi'],
                     "no_telepon" => $mahasiswaData['phone_number'],
-                    "agama" => $mahasiswaData['agama']
+                    "agama" => $mahasiswaData['agama'],
+                    "gender" => $mahasiswaData['gender'],
 
                 ],
                 "haveScore" => [

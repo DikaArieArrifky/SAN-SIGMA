@@ -1,8 +1,9 @@
 <?php
 
 require_once 'app/core/Model.php';
+require_once 'app/core/IUserApp.php';
 
-class Dosen extends Model 
+class Dosen extends Model implements IUserApp
 {
     public function __construct($db)
     {

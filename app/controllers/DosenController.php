@@ -43,7 +43,7 @@ class DosenController extends Controller
                     "score" => $dosenData['score'],
                     "prodi" => $this->dosen->getProdiNameBydosenProdiId($dosenData['prodi_id']),
                     "countTerverifikasi" => $this->dosen->getDosenTerverifikasiByNip($dosenData['nip']),
-
+                    "gender" => $dosenData['gender'],
                     "status" => $dosenData['status'],
                     "alamat" => $dosenData['Alamat'],
                     "kota" => $dosenData['Kota'],

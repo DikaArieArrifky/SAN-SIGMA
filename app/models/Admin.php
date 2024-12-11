@@ -3,6 +3,7 @@ require_once 'app/core/Model.php';
 require_once 'app/core/IUserApp.php';
 
 class Admin extends Model implements IUserApp
+
 {
     public function __construct($db)
     {
