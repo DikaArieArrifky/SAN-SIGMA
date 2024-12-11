@@ -790,4 +790,65 @@ class AdminController extends Controller
             }
         }
     }
+
+    public function uploadPhoto()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['photo'])) {
+            try {
+                $file = $_FILES['photo'];
+                $id = $_POST['id'];
+
+                // Validate image
+                $check = getimagesize($file['tmp_name']);
+                if ($check === false) {
+                    throw new Exception("File is not an image");
+                }
+
+                // Validate file size (max 5MB)
+                if ($file['size'] > 5242880) {
+                    throw new Exception("File is too large. Maximum size is 5MB");
+                }
+
+                // cek tipe file
+                $allowed = ['image/jpeg', 'image/png', 'image/jpg'];
+                if (!in_array($file['type'], $allowed)) {
+                    throw new Exception("Invalid file type. Only JPG, JPEG & PNG files are allowed");
+                }
+
+                $uploadDir = dirname(__DIR__, 2) . '/assets/img/person/';
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
+
+                // Generate unique filename
+                $filename = ($file['name']);
+                $uploadFile = $uploadDir . $filename;
+
+                // Delete old photo if exists
+                $oldPhoto = $this->admin->getPhotoById($id);
+                if ($oldPhoto && file_exists($uploadDir . $oldPhoto)) {
+                    unlink($uploadDir . $oldPhoto);
+                }
+
+
+                // Move uploaded file
+                if (!move_uploaded_file($file['tmp_name'], $uploadFile)) {
+                    throw new Exception("Failed to upload file");
+                }
+                consoleLog('uploadFile', $uploadFile);
+                consoleLog('moveFile', move_uploaded_file($file['tmp_name'], $uploadFile));
+                // Update database
+                $this->admin->updatePhoto($id, $filename);
+
+                // Redirect back to profile
+                header('Location: screen?screen=profile');
+                exit();
+            } catch (Exception $e) {
+                echo '<script>alert("Error: ' . $e->getMessage() . '");</script>';
+                echo '<script>setTimeout(function(){ window.location.href = "screen?screen=profile"; }, 10);</script>';
+                exit();
+            }
+        }
+    }
 }

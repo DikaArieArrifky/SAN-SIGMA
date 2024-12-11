@@ -444,5 +444,31 @@ ORDER BY year ASC");
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+ 
+    public function getPhotoById($id)
+    {
+        try {
+            $query = $this->db->prepare("
+            SELECT photo 
+            FROM admins
+            WHERE id = :id
+        ");
+
+            $query->bindValue(":id", $id);
+            $query->execute();
+
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+            return $result ? $result['photo'] : null;
+        } catch (PDOException $e) {
+            error_log("Error fetching photo: " . $e->getMessage());
+            return null;
+        }
+    }
+    public function updatePhoto($id, $photo)
+    {
+        $query = $this->db->prepare("UPDATE admins SET photo = :photo WHERE id = :id");
+        $query->bindValue(":photo", $photo);
+        $query->bindValue(":id", $id);
+        $query->execute();
+    }
 }
