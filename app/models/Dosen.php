@@ -3,7 +3,7 @@
 require_once 'app/core/Model.php';
 require_once 'app/core/IUserApp.php';
 
-class Dosen extends Model implements IUserApp
+class Dosen extends Model
 {
     public function __construct($db)
     {
@@ -66,6 +66,12 @@ class Dosen extends Model implements IUserApp
         $query = $this->db->prepare("SELECT COUNT(*) as count FROM dosens WHERE score > 0");
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getProdiDosen() {
+        $query = $this->db->prepare("SELECT name, prodi_id, score FROM dosens WHERE visible_dosens = 1 AND status = 'Aktif' ORDER BY score DESC LIMIT 10");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     
     public function getAllDosen()
