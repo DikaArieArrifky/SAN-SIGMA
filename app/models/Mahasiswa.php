@@ -81,22 +81,32 @@ class Mahasiswa extends Model implements IUserApp
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // public function getMahasiswaByVerifiedYear($year)
-    // {
-    // $query = $this->db->prepare("
-    //     SELECT 
-    //         m.name, 
-    //         m.nim, 
-    //         v.verified_at, 
-    //         m.score 
-    //     FROM mahasiswas m
-    //     INNER JOIN verifikasis v ON m.nim = v.mahasiswa_nim
-    //     WHERE YEAR(v.verified_at) = :year
-    //     ORDER BY v.verified_at DESC");
-    // $query->bindValue(":year", $year, PDO::PARAM_INT);
-    // $query->execute();
-    // return $query->fetchAll(PDO::FETCH_ASSOC);
-    // }
+    public function getMahasiswaByVerifiedYear($year)
+    {
+    $query = $this->db->prepare("
+        SELECT 
+            m.name, 
+            m.nim, 
+            v.verifed_at, 
+            m.score 
+        FROM mahasiswas m
+        INNER JOIN verifikasis v ON m.nim = v.mahasiswa_nim
+        WHERE YEAR(v.verifed_at) = :year
+        ORDER BY v.verifed_at DESC");
+    $query->bindValue(":year", $year, PDO::PARAM_INT);
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAvailableYears()
+{
+    $query = $this->db->query("
+        SELECT DISTINCT YEAR(verifed_at) AS year 
+        FROM verifikasis 
+        ORDER BY year DESC
+    ");
+    return $query->fetchAll(PDO::FETCH_COLUMN);
+}
 
     //update Section
     public function updatePhoto($nim, $photo)

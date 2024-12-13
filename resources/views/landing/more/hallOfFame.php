@@ -23,9 +23,42 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        select, button {
+            font-size: 16px;
+            padding: 10px 15px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        select {
+            appearance: none;
+            background-color: #fff;
+            color: #007bff;
+        }
+        select:hover, button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
         .tables {
             display: flex;
             gap: 20px;
+            flex-wrap: wrap;
         }
         .table {
             flex: 1;
@@ -58,19 +91,35 @@
         td {
             text-align: center;
         }
+        @media (max-width: 768px) {
+            .tables {
+                flex-direction: column;
+            }
+        }
     </style>       
 </head>
 <body>
 <div class="container">
-<div style="text-align: center; margin-bottom: 20px;">
-    <label for="filterOption">Filter Data:</label>
-    <select id="filterOption" onchange="applyFilter()">
-        <option value="all">-- Tampilkan Semua Data --</option>
-        <option value="top10">Tampilkan 10 Teratas</option>
-    </select>
-</div>
-
+    <!-- Tombol Kembali ke Halaman Utama -->
+    <div style="text-align: left; margin-bottom: 20px;">
+        <a href="index"><button class="btn btn-primary">Kembali ke Halaman Utama</button></a>
+    </div>
+<div class="container">
     <h1>Daftar Skor Mahasiswa dan Dosen</h1>
+    <div class="filters">
+        <select id="filterOption" onchange="applyFilter()">
+            <option value="all">-- Tampilkan Semua Data --</option>
+            <option value="top10">Tampilkan 10 Teratas</option>
+        </select>
+        <select id="filterYear" onchange="applyFilter()">
+            <option value="all">-- Semua Tahun --</option>
+            <?php foreach ($data['years'] as $year): ?>
+                <option value="<?= $year ?>">Tahun <?= $year ?></option>
+            <?php endforeach; ?>
+        </select>
+        <button onclick="applyFilter()">Terapkan Filter</button>
+    </div>
+
     <div class="tables">
         <!-- Daftar Mahasiswa -->
         <div class="table">
@@ -85,14 +134,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $no = 1; foreach ($data['mahasiswa'] as $mahasiswa): ?>
-                        <tr>
-                            <td><?= $no++; ?></td>
-                            <td><?= $mahasiswa['name']; ?></td>
-                            <td><?= $mahasiswa['jurusan']; ?></td>
-                            <td><?= $mahasiswa['score']; ?></td>
-                        </tr>
-                    <?php endforeach; ?>
+                <?php $no = 1; foreach ($data['mahasiswa'] as $mahasiswa): ?>
+                    <tr>
+                    <td class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $no == 1 ? '#FFD700, #FFA500' :  ($no == 2 ? '#C0C0C0, #D3D3D3' : ($no == 3 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"> <?= ($no++) . ($no - 1 == 1 ? 'st' : ($no -1 == 2 ? 'nd' : ($no -1 == 3 ? 'rd' : 'th'))) ?></td>
+                        <td><?= $mahasiswa['name'] ?></td>
+                        <td><?= $mahasiswa['jurusan'] ?></td>
+                        <td><?= $mahasiswa['score'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -110,67 +159,60 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $no = 1; foreach ($data['dosen'] as $dosen): ?>
-                        <tr>
-                            <td><?= $no++; ?></td>
-                            <td><?= $dosen['name']; ?></td>
-                            <td><?= $dosen['jurusan']; ?></td>
-                            <td><?= $dosen['score']; ?></td>
-                        </tr>
-                    <?php endforeach; ?>
+                <?php $no = 1; foreach ($data['dosen'] as $dosen): ?>
+                    <tr>
+                        <td class="badge bg-gradient-primary px-3 py-2 rounded-pill me-3" style="background: linear-gradient(45deg, <?= $no == 1 ? '#FFD700, #FFA500' :  ($no == 2 ? '#C0C0C0, #D3D3D3' : ($no == 3 ? '#CD7F32, #B8860B' : '#4e54c8, #8f94fb')); ?>); width: 50px; text-align: center;"> <?= ($no++) . ($no - 1 == 1 ? 'st' : ($no -1 == 2 ? 'nd' : ($no -1 == 3 ? 'rd' : 'th'))) ?></td>
+                        <td><?= $dosen['name'] ?></td>
+                        <td><?= $dosen['jurusan'] ?></td>
+                        <td><?= $dosen['score'] ?></td>
+                    </tr>
+                <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <script>
-   let mahasiswaOriginalData = [];
-let dosenOriginalData = [];
+    let mahasiswaOriginalData = [];
+    let dosenOriginalData = [];
 
-// Simulasi mengambil data dari tabel untuk semua mahasiswa dan dosen.
-function fetchInitialData() {
-    mahasiswaOriginalData = Array.from(document.querySelectorAll('#mahasiswaTable tbody tr'));
-    dosenOriginalData = Array.from(document.querySelectorAll('#dosenTable tbody tr'));
-}
-
-// Fungsi untuk menerapkan filter berdasarkan dropdown
-function applyFilter() {
-    const filterOption = document.getElementById('filterOption').value;
-
-    const mahasiswaTableBody = document.querySelector('#mahasiswaTable tbody');
-    const dosenTableBody = document.querySelector('#dosenTable tbody');
-
-    if (filterOption === "top10") {
-        // Filter untuk Top 10 Mahasiswa berdasarkan skor tertinggi
-        const top10Mahasiswa = mahasiswaOriginalData
-            .sort((a, b) => parseFloat(b.cells[3].textContent) - parseFloat(a.cells[3].textContent))
-            .slice(0, 10);
-        
-        const top10Dosen = dosenOriginalData
-            .sort((a, b) => parseFloat(b.cells[3].textContent) - parseFloat(a.cells[3].textContent))
-            .slice(0, 10);
-
-        // Bersihkan tabel sebelum mengisi data filter
-        mahasiswaTableBody.innerHTML = '';
-        dosenTableBody.innerHTML = '';
-
-        top10Mahasiswa.forEach(row => mahasiswaTableBody.appendChild(row));
-        top10Dosen.forEach(row => dosenTableBody.appendChild(row));
-    } else if (filterOption === "all") {
-        // Jika pengguna memilih "Tampilkan Semua Data", kembalikan data asli
-        mahasiswaTableBody.innerHTML = '';
-        dosenTableBody.innerHTML = '';
-
-        mahasiswaOriginalData.forEach(row => mahasiswaTableBody.appendChild(row));
-        dosenOriginalData.forEach(row => dosenTableBody.appendChild(row));
+    function fetchInitialData() {
+        mahasiswaOriginalData = Array.from(document.querySelectorAll('#mahasiswaTable tbody tr'));
+        dosenOriginalData = Array.from(document.querySelectorAll('#dosenTable tbody tr'));
     }
-}
 
-// Jalankan fetch data saat halaman dimuat
-document.addEventListener("DOMContentLoaded", fetchInitialData);
+    function applyFilter() {
+        const filterYear = document.getElementById('filterYear').value;
+        const filterOption = document.getElementById('filterOption').value;
 
+        const mahasiswaTableBody = document.querySelector('#mahasiswaTable tbody');
+        const dosenTableBody = document.querySelector('#dosenTable tbody');
+
+        let filteredMahasiswaRows = mahasiswaOriginalData;
+        let filteredDosenRows = dosenOriginalData;
+
+        if (filterYear !== 'all') {
+            filteredMahasiswaRows = filteredMahasiswaRows.filter(row => row.dataset.year === filterYear);
+        }
+
+        if (filterOption === 'top10') {
+            filteredMahasiswaRows = filteredMahasiswaRows
+                .sort((a, b) => parseFloat(b.cells[3].textContent) - parseFloat(a.cells[3].textContent))
+                .slice(0, 10);
+
+            filteredDosenRows = filteredDosenRows
+                .sort((a, b) => parseFloat(b.cells[3].textContent) - parseFloat(a.cells[3].textContent))
+                .slice(0, 10);
+        }
+
+        mahasiswaTableBody.innerHTML = '';
+        filteredMahasiswaRows.forEach(row => mahasiswaTableBody.appendChild(row));
+
+        dosenTableBody.innerHTML = '';
+        filteredDosenRows.forEach(row => dosenTableBody.appendChild(row));
+    }
+
+    document.addEventListener("DOMContentLoaded", fetchInitialData);
 </script>
 </body>
-
-
 </html>

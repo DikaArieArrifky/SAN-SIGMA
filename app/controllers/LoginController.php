@@ -100,10 +100,12 @@ class LoginController extends Controller
         $mahasiswaModel = new Mahasiswa($db);
         $dosenModel = new Dosen($db);
 
-        $data['mahasiswa'] = $mahasiswaModel->getProdiNameByMhsProdiId();
+        $data['mahasiswa'] = $mahasiswaModel -> getProdiNameByMhsProdiId();
         $data['dosen'] = $dosenModel->getProdiDosen();
+        $data['years'] = $mahasiswaModel->getAvailableYears();
 
-    //     var_dump($data['mahasiswa']);
+    // var_dump($data['mahasiswa']);
+    // var_dump($data['years']);
     // exit();
 
         $this->view('landing/more/hallOfFame', $data);
