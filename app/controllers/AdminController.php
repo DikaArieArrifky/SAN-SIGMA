@@ -72,8 +72,8 @@ class AdminController extends Controller
                     "phone_number" => $dataAdmin['phone_number'],
                     "gender" => $dataAdmin['gender'],
                 ],
-                "verifikasiPenghargaan" => $this->admin->getAllVerifikasiAndPenghargaan(),
-                "verifikasiPenghargaanOv" => $this->admin->getAllVerifikasiAndPenghargaanOv(),
+                "verifikasiPenghargaan" => $this->admin->getAllVerifikasiAndPenghargaan(), //presma/SAN-SIGMA/admin/screen?screen=verifikasi_prestasi
+                "verifikasiPenghargaanOv" => $this->admin->getAllVerifikasiAndPenghargaanOv(),//presma/SAN-SIGMA/admin/screen?screen=riwayat
                 "countAllPenghargaan" => $this->admin->getCountAllPenghargaan(),
                 "countAllVerifiedPenghargaan" => $this->admin->getAllCountVerifiedPenghargaan(),
                 "countAllNotVerifiedPenghargaan" => $this->admin->getAllCountNotVerifiedPenghargaan(),

@@ -59,80 +59,21 @@ class Admin extends Model implements IUserApp
 
     public function getAllVerifikasiAndPenghargaan()
     {
-        $query = $this->db->prepare("
-            SELECT 
-                v.*,
-                p.*,
-                t.nama as tingkatan_nama,
-                d.name as dosen_name,
-                m.name as mahasiswa_name
-
-            FROM verifikasis v
-            LEFT JOIN penghargaans p ON v.penghargaan_id = p.id
-            LEFT JOIN tingkatans t ON p.tingkat_id = t.id
-            LEFT JOIN dosens d ON v.dosen_nip = d.nip
-            LEFT JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
-             where v.verif_admin ='DiProses' and v.visible_verifikasis = '1'
-            ORDER BY v.created_at DESC
-           
-        ");
-
+        $query = $this->db->prepare("EXEC sp_GetAllVerifikasiAndPenghargaan");
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
     public function getAllVerifikasiAndPenghargaanOv()
     {
-        $query = $this->db->prepare("
-            SELECT 
-            v.*,
-            p.*,
-            t.nama as tingkatan_nama,
-            d.name as dosen_name,
-            m.name as mahasiswa_name,
-            per.nama as peringkat_nama,
-            prod.nama as prodi_nama
-
-            FROM verifikasis v
-            LEFT JOIN penghargaans p ON v.penghargaan_id = p.id
-            LEFT JOIN tingkatans t ON p.tingkat_id = t.id
-            LEFT JOIN dosens d ON v.dosen_nip = d.nip
-            LEFT JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
-            LEFT JOIN peringkats per ON p.peringkat_id = per.id
-            LEFT JOIN prodis prod ON m.prodi_id = prod.id
-             where v.verif_admin !='DiProses' and v.visible_verifikasis = '1'
-            ORDER BY v.created_at DESC
-        ");
-
+        $query = $this->db->prepare("EXEC sp_GetAllVerifikasiAndPenghargaanOv");
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function getVerifikasiAndPenghargaanByIdVerifikasi($idVerifikasi)
     {
-        $query = $this->db->prepare("
-            SELECT 
-                v.*,
-                p.*,
-                p.id as pengId,
-                t.nama as tingkatan_nama,
-                d.name as dosen_name,
-                d.nip as dosen_nip,
-                per.nama as peringkat_nama,
-                m.name as mahasiswa_name,
-                m.nim as nim,
-                m.college_year as angkatan,
-                prod.nama as prodi
-               
-            FROM verifikasis v
-            LEFT JOIN penghargaans p ON v.penghargaan_id = p.id
-            LEFT JOIN tingkatans t ON p.tingkat_id = t.id
-            LEFT JOIN peringkats per ON p.peringkat_id = per.id
-            LEFT JOIN dosens d ON v.dosen_nip = d.nip
-            LEFT JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
-            LEFT JOIN prodis prod ON m.prodi_id = prod.id
-            WHERE v.id = :id
-        ");
-
-        $query->bindValue(":id", $idVerifikasi);
+        $query = $this->db->prepare("EXEC sp_GetVerifikasiAndPenghargaanByIdVerifikasi :id");
+        $query->bindValue(":id", $idVerifikasi, PDO::PARAM_INT);
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }
@@ -268,13 +209,7 @@ class Admin extends Model implements IUserApp
 
     public function getCountAngkatanMahasiswa()
     {
-        $query = $this->db->prepare("
-SELECT m.college_year, COUNT(*) AS count
- FROM verifikasis v 
- INNER JOIN mahasiswas m ON v.mahasiswa_nim = m.nim
- WHERE v.verif_admin = 'Terverifikasi' AND v.verif_pembimbing = 'Terverifikasi'
- GROUP BY m.college_year
-        ");
+        $query = $this->db->prepare("SELECT * FROM dbo.fn_GetCountAngkatanMahasiswa()");
         $query->execute();
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -294,11 +229,7 @@ SELECT m.college_year, COUNT(*) AS count
 
     public function getCountTahunVerif()
     {
-        $query = $this->db->prepare("SELECT YEAR(v.verifed_at) as year, COUNT(*) AS count
-FROM verifikasis v
-WHERE v.verif_admin = 'Terverifikasi' AND v.verif_pembimbing = 'Terverifikasi'
-GROUP BY YEAR(v.verifed_at)
-ORDER BY year ASC");
+        $query = $this->db->prepare("SELECT * FROM dbo.fn_GetCountTahunVerif()");
         $query->execute();
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
 
@@ -444,7 +375,7 @@ ORDER BY year ASC");
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
- 
+
     public function getPhotoById($id)
     {
         try {
