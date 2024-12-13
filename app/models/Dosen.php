@@ -74,6 +74,16 @@ class Dosen extends Model implements IUserApp
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getProdiDosen() {
+        $query = $this->db->prepare("SELECT d.name, p.nama AS jurusan, d.score 
+            FROM dosens d
+            INNER JOIN prodis p ON d.prodi_id = p.id
+            ORDER BY d.score desc");
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     public function getPasswordByUserId($x)
     {
         $query = $this->db->prepare("SELECT password FROM users WHERE id = :id");

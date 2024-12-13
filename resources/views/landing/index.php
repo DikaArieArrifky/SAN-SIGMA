@@ -313,7 +313,7 @@
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </ol>
-                            <a href="#" class="buy-btn">Lihat Selengkapnya</a>
+                            <a href="hallOfFame" class="buy-btn">Lihat Selengkapnya</a>
                         </div>
                     </div>
 
@@ -331,7 +331,7 @@
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </ol>
-                            <a href="#" class="buy-btn">Lihat Selengkapnya</a>
+                            <a href="hallOfFame" class="buy-btn">Lihat Selengkapnya</a>
                         </div>
                     </div>
                     <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="1000">
@@ -348,7 +348,7 @@
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </ol>
-                            <a href="#" class="buy-btn">Lihat Selengkapnya</a>
+                            <a href="hallOfFame" class="buy-btn">Lihat Selengkapnya</a>
                         </div>
                     </div>
                 </div>

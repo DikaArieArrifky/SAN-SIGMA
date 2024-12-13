@@ -101,4 +101,20 @@ class LoginController extends Controller
                 break;
         }
     }
+    public function hallOfFame()
+    {
+        $db = Database::getInstance(getDatabaseConfig(), 'handleError');
+        $mahasiswaModel = new Mahasiswa($db);
+        $dosenModel = new Dosen($db);
+
+        $data['mahasiswa'] = $mahasiswaModel -> getProdiNameByMhsProdiId();
+        $data['dosen'] = $dosenModel->getProdiDosen();
+        $data['years'] = $mahasiswaModel->getAvailableYears();
+
+    // var_dump($data['mahasiswa']);
+    // var_dump($data['years']);
+    // exit();
+
+        $this->view('landing/more/hallOfFame', $data);
+    }
 }
