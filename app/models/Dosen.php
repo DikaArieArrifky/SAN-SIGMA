@@ -69,7 +69,10 @@ class Dosen extends Model
     }
 
     public function getProdiDosen() {
-        $query = $this->db->prepare("SELECT name, prodi_id, score FROM dosens WHERE visible_dosens = 1 AND status = 'Aktif' ORDER BY score DESC LIMIT 10");
+        $query = $this->db->prepare("SELECT d.name, p.nama AS jurusan, d.score 
+            FROM dosens d
+            INNER JOIN prodis p ON d.prodi_id = p.id
+            ORDER BY d.score");
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
