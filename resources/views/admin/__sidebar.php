@@ -6,6 +6,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <div class="bg-gray-900 text-white w-[20rem] flex flex-col h-screen transition-all duration-300 sidebar-expanded" id="sidebar-open">
     <div class="flex items-center justify-center h-24 border-b border-gray-800">
         <img src="<?= IMG; ?>logo_sigma.png" alt="San Sigma Logo" class="h-14">
@@ -44,13 +45,17 @@
                 <i class="bi bi-building"></i>
                 <span class="ml-3">Kelola Prodi</span>
             </button>
-            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_tingakatan" name="screen">
+            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_tingkatan" name="screen">
                 <i class="bi bi-layers"></i>
                 <span class="ml-3">Kelola Tingkatan</span>
             </button>
             <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="kelola_peringkat" name="screen">
                 <i class="bi bi-award-fill"></i>
                 <span class="ml-3">Kelola Peringkat</span>
+            </button>
+            <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="tampilkan_semua_user" name="screen">
+                <i class="fas fa-users"></i>
+                <span class="ml-3">Tampilkan User</span>
             </button>
             <hr>
             <button type="submit" class="sidebar-menu-btn w-full flex items-center px-4 py-3 mt-3 text-gray-200 rounded-lg" value="profile" name="screen">
@@ -108,11 +113,14 @@
             <button type="submit" value="kelola_prodi" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-building"></i>
             </button>
-            <button type="submit" value="kelola_tingakatan" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
+            <button type="submit" value="kelola_tingkatan" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-layers"></i>
             </button>
             <button type="submit" value="kelola_peringkat" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
             <i class="bi bi-award-fill"></i>
+            </button>
+            <button type="submit" value="tamplikan_semua_user" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">
+            <i class="bi bi-user"></i>
             </button>
             <hr>
             <button type="submit" value="profile" name="screen" class="sidebar-menu-btn w-full flex items-center justify-center px-4 py-2 mt-2 text-gray-200 rounded-lg">

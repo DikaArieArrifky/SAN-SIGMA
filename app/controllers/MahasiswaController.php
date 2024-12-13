@@ -21,7 +21,7 @@ class MahasiswaController extends Controller
         $this->dosen = new Dosen(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
-    public function index($screen = "dashboard")
+   public function index($screen = "dashboard")
     {
         try {
             // Fetch mahasiswa data
@@ -50,10 +50,11 @@ class MahasiswaController extends Controller
                     "alamat" => $mahasiswaData['Alamat'],
                     "kota" => $mahasiswaData['Kota'],
                     "score" => $mahasiswaData['score'],
-                    "prodi_id" => $mahasiswaData['prodi_id'],
+                    "prodi_id" => $mahasiswaData['prodi_id'],   
                     "provinsi" => $mahasiswaData['Provinsi'],
                     "no_telepon" => $mahasiswaData['phone_number'],
-                    "agama" => $mahasiswaData['agama']
+                    "agama" => $mahasiswaData['agama'],
+                    "gender" => $mahasiswaData['gender'],
 
                 ],
                 "haveScore" => [
@@ -81,7 +82,7 @@ class MahasiswaController extends Controller
             exit();
         }
     }
-
+        
     // show riwayat mahasiswa
     public function getVerifikasiDetail()
     {

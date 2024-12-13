@@ -12,6 +12,7 @@ class LoginController extends Controller
     private $mahasiswa;
     private $admin;
     private $landing;
+    private $dosen;
 
     public function __construct()
     {
@@ -19,6 +20,8 @@ class LoginController extends Controller
         $this->mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->admin = new Admin(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
         $this->landing = new Landing(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+
+        $this->dosen = new Dosen(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
     }
 
     public function index()
@@ -80,7 +83,11 @@ class LoginController extends Controller
                 header("Location: admin/index");
                 break;
             case 'dosen':
-                $this->view('dosen/index', ['user' => $user]);
+                require_once 'app/controllers/DosenController.php';
+                $dosen = new Dosen(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+                $user_id = $this->dosen->getUserId(Session::get('username'));
+                Session::set('user_id', $user_id);
+                header("Location: dosen/index");
                 break;
             case 'mahasiswa':
                 $mahasiswa = new Mahasiswa(Database::getInstance(getDatabaseConfig(), [$this, 'error']));

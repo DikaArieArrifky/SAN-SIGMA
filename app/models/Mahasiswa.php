@@ -317,6 +317,138 @@ public function insertVerifikasi($data)
     $query->execute($data);
     return $this->db->lastInsertId();
 }
-    
+public function getAll()
+{
+    $query = $this->db->prepare("
+        SELECT * FROM view_user_mahasiswa
+        ORDER BY nim ASC
+    ");
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Create user
+public function createUser($name, $username, $password, $role)
+{
+    try {
+        $query = $this->db->prepare("
+            INSERT INTO users (name, username, password, role)
+            VALUES (:name, :username, :password, :role)
+        ");
+        $query->bindValue(":name", $name);
+        $query->bindValue(":username", $username);
+        $query->bindValue(":password", $password);
+        $query->bindValue(":role", $role);
+        $query->execute();
+        return $this->db->lastInsertId();
+    } catch (Exception $e) {
+        throw new Exception("Error creating user: " . $e->getMessage());
+    }
+}
+
+// Create mahasiswa
+public function createMahasiswa($userId,$name, $nim, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $college_year, $status)
+{
+    try {
+        $query = $this->db->prepare("
+            INSERT INTO mahasiswas (user_id, name, nim, gender, phone_number, photo, alamat, kota, provinsi, agama, prodi_id, college_year, status)
+            VALUES (:user_id, :name, :nim, :gender, :phone_number, :photo, :alamat, :kota, :provinsi, :agama, :prodi_id, :college_year, :status)
+        ");
+        $query->bindValue(":user_id", $userId);
+        $query->bindValue(":name", $name);
+        $query->bindValue(":nim", $nim);
+        $query->bindValue(":gender", $gender);
+        $query->bindValue(":phone_number", $phone_number);
+        $query->bindValue(":photo", $photo);
+        $query->bindValue(":alamat", $alamat);
+        $query->bindValue(":kota", $kota);
+        $query->bindValue(":provinsi", $provinsi);
+        $query->bindValue(":agama", $agama);
+        $query->bindValue(":prodi_id", $prodi_id);
+        $query->bindValue(":college_year", $college_year);
+        $query->bindValue(":status", $status);
+        return $query->execute();
+    } catch (Exception $e) {
+        throw new Exception("Error creating mahasiswa: " . $e->getMessage());
+    }
+}
+
+// Update user
+public function updateUser($id, $username, $password)
+{
+    try {
+        $query = $this->db->prepare("
+            UPDATE users 
+            SET username = :username, password = :password
+            WHERE id = :id
+        ");
+        $query->bindValue(":username", $username);
+        $query->bindValue(":password", $password);
+        $query->bindValue(":id", $id);
+        return $query->execute();
+    } catch (Exception $e) {
+        throw new Exception("Error updating user: " . $e->getMessage());
+    }
+}
+
+// Update mahasiswa
+public function updateMahasiswa($nim, $name, $gender, $phone_number, $photo, $alamat, $kota, $provinsi, $agama, $prodi_id, $college_year, $status)
+{
+    try {
+        $query = $this->db->prepare("
+            UPDATE mahasiswas 
+            SET name = :name, gender = :gender, phone_number = :phone_number, photo = :photo, alamat = :alamat, kota = :kota, provinsi = :provinsi, agama = :agama, prodi_id = :prodi_id, college_year = :college_year, status = :status
+            WHERE nim = :nim
+        ");
+        $query->bindValue(":nim", $nim);
+        $query->bindValue(":name", $name);
+        $query->bindValue(":gender", $gender);
+        $query->bindValue(":phone_number", $phone_number);
+        $query->bindValue(":photo", $photo);
+        $query->bindValue(":alamat", $alamat);
+        $query->bindValue(":kota", $kota);
+        $query->bindValue(":provinsi", $provinsi);
+        $query->bindValue(":agama", $agama);
+        $query->bindValue(":prodi_id", $prodi_id);
+        $query->bindValue(":college_year", $college_year);
+        $query->bindValue(":status", $status);
+
+        return $query->execute();
+    } catch (Exception $e) {
+        throw new Exception("Error updating mahasiswa: " . $e->getMessage());
+    }
+}
+
+// Delete mahasiswa (soft delete)
+public function deleteMahasiswa($nim)
+{
+    try {
+        $query = $this->db->prepare("
+            UPDATE mahasiswas 
+            SET visible_mahasiswas = 0
+            WHERE nim = :nim
+        ");
+        $query->bindValue(":nim", $nim);
+        return $query->execute();
+    } catch (Exception $e) {
+        throw new Exception("Error deleting mahasiswa: " . $e->getMessage());
+    }
+}
+
+// Delete user (soft delete)
+public function deleteUser($id)
+{
+    try {
+        $query = $this->db->prepare("
+            UPDATE users 
+            SET visible_users = 0
+            WHERE id = :id
+        ");
+        $query->bindValue(":id", $id);
+        return $query->execute();
+    } catch (Exception $e) {
+        throw new Exception("Error deleting user: " . $e->getMessage());
+    }
+}
 }
 
