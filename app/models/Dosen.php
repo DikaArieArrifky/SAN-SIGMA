@@ -17,7 +17,7 @@ class Dosen extends Model implements IUserApp
         return $query->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getProdiNameBydosenProdiId($prodiId) 
+    public function getProdiNameBydosenProdiId($prodiId)
     {
         $query = $this->db->prepare("SELECT * FROM prodis WHERE id = :prodi_id");
         $query->bindValue(":prodi_id", $prodiId);
@@ -35,6 +35,17 @@ class Dosen extends Model implements IUserApp
         $query->bindValue(":username", $username);
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC)['id'];
+    }
+    public function getTop10ProdiNameByDosenProdiId()
+    {
+        $sql = "SELECT TOP 10 d.name, p.nama AS jurusan, d.score 
+        FROM dosens d
+        INNER JOIN prodis p ON d.prodi_id = p.id
+        ORDER BY d.score DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getDosenByNip($nip)
@@ -67,7 +78,7 @@ class Dosen extends Model implements IUserApp
         $query->execute();
         return $query->fetch(PDO::FETCH_ASSOC);
     }
-    
+
     public function getAllDosen()
     {
         $query = $this->db->prepare("SELECT * FROM dosens WHERE visible_dosens = 1 and status = 'Aktif' order by name asc");
@@ -75,7 +86,8 @@ class Dosen extends Model implements IUserApp
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getProdiDosen() {
+    public function getProdiDosen()
+    {
         $query = $this->db->prepare("SELECT d.name, p.nama AS jurusan, d.score 
             FROM dosens d
             INNER JOIN prodis p ON d.prodi_id = p.id
@@ -83,7 +95,7 @@ class Dosen extends Model implements IUserApp
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     public function getPasswordByUserId($x)
     {
         $query = $this->db->prepare("SELECT password FROM users WHERE id = :id");
@@ -106,7 +118,7 @@ class Dosen extends Model implements IUserApp
             WHERE v.mahasiswa_nim = :nim
             ORDER BY v.created_at DESC
         ");
-        
+
         $query->bindValue(":nim", $nip);
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
@@ -205,11 +217,10 @@ class Dosen extends Model implements IUserApp
             WHERE v.dosen_nip = :nip
             ORDER BY v.created_at DESC
         ");
-        
+
         $query->bindValue(":nip", $nip);
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
-        
     }
     public function getDosenProsesVerifikasiByNIP($nip)
     {
@@ -231,13 +242,12 @@ class Dosen extends Model implements IUserApp
             WHERE v.verif_pembimbing = 'Diproses' and v.dosen_nip = :nip 
             ORDER BY v.created_at DESC
         ");
-        
+
         $query->bindValue(":nip", $nip);
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
-        
     }
-    
+
     public function getVerifikasiAndPenghargaanByIdVerifikasi($idVerifikasi)
     {
         $query = $this->db->prepare("
@@ -284,7 +294,7 @@ class Dosen extends Model implements IUserApp
             $query->bindValue(":status", $status);
             $query->bindValue(":pesan", $pesan);
             $query->bindValue(":id", $verifikasiId);
-           
+
             $query->execute();
 
             // Get verification statuses

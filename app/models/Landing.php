@@ -53,4 +53,41 @@ class Landing extends Model
         $query->execute();
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getAllNewVerifikasi(){
+        $query = $this->db->prepare("
+            SELECT 
+                p.judul,
+                m.name as mahasiswa_name,
+                t.nama as tingkatan_name
+            FROM verifikasis v
+            JOIN penghargaans p ON v.penghargaan_id = p.id
+            JOIN mahasiswas m ON p.mahasiswa_nim = m.nim
+            JOIN tingkatans t ON p.tingkat_id = t.id
+            WHERE v.verif_admin = 'Terverifikasi' 
+            AND v.verif_pembimbing = 'Terverifikasi'
+            ORDER BY v.verifed_at DESC
+        ");
+
+        $query->execute();
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTop10MahasiswaByYear($year)
+    {
+        $query = $this->db->prepare("
+            SELECT * FROM dbo.fn_GetTop10MahasiswaScoresByYear(:year)
+        ");
+
+        $query->execute([':year' => $year]);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTop10DosenByYear($year){
+        $query = $this->db->prepare("
+            SELECT * FROM dbo.fn_GetTop10DosenScoresByYear(:year)
+        ");
+        $query->execute([':year' => $year]);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

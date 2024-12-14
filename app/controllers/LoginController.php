@@ -31,7 +31,6 @@ class LoginController extends Controller
             $top10mahasiswas = $this->landing->getTop10mahasiswas();
             $top10dosen = $this->landing->getTop10dosen();
             $top10NewVerifikasi = $this->landing->getTop10NewVerifikasi(); // Fixed variable name
-
             // Pass data to view
             $this->view('landing/index', [
                 'top10mahasiswas' => $top10mahasiswas,
@@ -106,15 +105,69 @@ class LoginController extends Controller
         $db = Database::getInstance(getDatabaseConfig(), 'handleError');
         $mahasiswaModel = new Mahasiswa($db);
         $dosenModel = new Dosen($db);
+        $landing = new Landing($db);
 
         $data['mahasiswa'] = $mahasiswaModel -> getProdiNameByMhsProdiId();
         $data['dosen'] = $dosenModel->getProdiDosen();
         $data['years'] = $mahasiswaModel->getAvailableYears();
-
-    // var_dump($data['mahasiswa']);
-    // var_dump($data['years']);
-    // exit();
-
+        $data['newAllVerifikasi'] = $landing->getAllNewVerifikasi();
+        $data['top10mahasiswas'] = $mahasiswaModel -> getTop10ProdiNameByMhsProdiId();
+        $data['top10dosen'] = $dosenModel->getTop10ProdiNameByDosenProdiId();
+        $data['landing'] = $landing; // Add landing model to view data
+       
         $this->view('landing/more/hallOfFame', $data);
     }
+    public function getTop10MahasiswaByYear($year)
+    {
+        try {
+            header('Content-Type: application/json');
+            
+            $landing = new Landing(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+            $result = $landing->getTop10MahasiswaByYear($year);
+            
+            if ($result === false) {
+                throw new Exception('Failed to fetch data');
+            }
+            
+            echo json_encode([
+                'status' => 'success',
+                'top10MhsByYear' => $result
+            ]);
+            exit;
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+            exit;
+        }
+    }
+    public function getTop10DosenByYear($year)
+    {
+        try {
+            header('Content-Type: application/json');
+            
+            $landing = new Landing(Database::getInstance(getDatabaseConfig(), [$this, 'error']));
+            $result = $landing->getTop10DosenByYear($year);
+            
+            if ($result === false) {
+                throw new Exception('Failed to fetch data');
+            }
+            
+            echo json_encode([
+                'status' => 'success',
+                'top10DsnByYear' => $result
+            ]);
+            exit;
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
+            exit;
+        }
+    }
+    
 }

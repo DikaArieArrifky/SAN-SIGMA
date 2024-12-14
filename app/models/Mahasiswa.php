@@ -71,16 +71,25 @@ class Mahasiswa extends Model implements IUserApp
 
     public function getProdiNameByMhsProdiId()
     {
-        $sql = "SELECT d.name, p.nama AS jurusan, d.score 
-                FROM mahasiswas d
-                INNER JOIN prodis p ON d.prodi_id = p.id
-                ORDER BY d.score DESC";
+        $sql = "SELECT  d.name, p.nama AS jurusan, d.score 
+            FROM mahasiswas d
+            INNER JOIN prodis p ON d.prodi_id = p.id
+            ORDER BY d.score DESC";
     
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getTop10ProdiNameByMhsProdiId(){
+        $sql = "SELECT TOP 10 d.name, p.nama AS jurusan, d.score 
+        FROM mahasiswas d
+        INNER JOIN prodis p ON d.prodi_id = p.id
+        ORDER BY d.score DESC";
 
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     public function getMahasiswaByVerifiedYear($year)
     {
     $query = $this->db->prepare("
@@ -103,6 +112,7 @@ class Mahasiswa extends Model implements IUserApp
     $query = $this->db->query("
         SELECT DISTINCT YEAR(verifed_at) AS year 
         FROM verifikasis 
+        WHERE verifed_at IS NOT NULL
         ORDER BY year DESC
     ");
     return $query->fetchAll(PDO::FETCH_COLUMN);
